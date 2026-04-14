@@ -1,3 +1,7 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.2.0+cpu
+torchvision==0.17.0+cpu
+
 # Core
 # torch, torchvision은 Dockerfile에서 CPU 전용으로 별도 설치
 numpy>=1.24.0
