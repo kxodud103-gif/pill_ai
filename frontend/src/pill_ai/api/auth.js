@@ -1,4 +1,4 @@
-const BASE_URL = "http://127.0.0.1:8000";
+const BASE_URL = "https://pillai-production.up.railway.app";
 
 // ── 회원가입
 export async function signup(email, password, username) {
