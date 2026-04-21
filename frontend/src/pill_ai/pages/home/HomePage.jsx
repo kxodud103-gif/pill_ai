@@ -172,9 +172,23 @@ export default function HomePage() {
   const navigate = useNavigate();
   const { cursor, ring } = useCursor();
   const [statusTab, setStatusTab] = useState("주간");
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isTablet, setIsTablet] = useState(window.innerWidth >= 768 && window.innerWidth < 1024);
+
+  useEffect(() => {
+    const onResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   const today = new Date();
   const dateStr = `${today.getFullYear()}.${String(today.getMonth()+1).padStart(2,"0")}.${String(today.getDate()).padStart(2,"0")}`;
+
+  const showSidebar = !isMobile && !isTablet;
+  const showBottomNav = isMobile || isTablet;
 
   return (
     <>
@@ -184,7 +198,7 @@ export default function HomePage() {
 
       <div className="hp-root">
         <div className="hp-body">
-          <Sidebar activePath="/app/home" />
+          {showSidebar && <Sidebar activePath="/app/home" />}
 
           <main className="hp-main">
 
@@ -374,6 +388,25 @@ export default function HomePage() {
             </div>
           </main>
         </div>
+
+        {/* 모바일/태블릿 하단 탭바 */}
+        {showBottomNav && (
+          <nav className="hp-bottom-nav">
+            {NAV_MAIN.map(item => {
+              const isActive = item.path === "/app/home";
+              return (
+                <button
+                  key={item.path}
+                  className={`hp-bottom-nav-btn${isActive ? " active" : ""}`}
+                  onClick={() => navigate(item.path)}
+                >
+                  <span className="hp-bottom-nav-icon">{item.icon}</span>
+                  <span className="hp-bottom-nav-label">{item.label}</span>
+                </button>
+              );
+            })}
+          </nav>
+        )}
       </div>
     </>
   );
@@ -392,14 +425,15 @@ const CSS = `
   --fn:'Plus Jakarta Sans',sans-serif;
   --sh:0 1px 4px rgba(120,80,200,0.08);
 }
-html,body{width:100%;height:100%;cursor:none;font-family:var(--fn);background:var(--bg);overflow:hidden;}
+html,body{width:100%;height:100%;cursor:none;font-family:var(--fn);background:var(--bg);overflow:hidden;overflow-x:hidden;}
+@media(max-width:1023px){html,body{cursor:auto;overflow-x:hidden;}}
 
 .hp-cursor{width:10px;height:10px;border-radius:50%;background:var(--a1);position:fixed;z-index:9999;pointer-events:none;transform:translate(-50%,-50%);mix-blend-mode:multiply;}
 .hp-cursor-ring{width:32px;height:32px;border-radius:50%;border:1px solid var(--a1);position:fixed;z-index:9998;pointer-events:none;transform:translate(-50%,-50%);opacity:.4;}
 
-.hp-root{display:flex;flex-direction:column;width:100%;height:100vh;overflow:hidden;}
-.hp-body{display:flex;flex:1;overflow:hidden;}
-.hp-main{flex:1;padding:24px 24px 32px;display:flex;flex-direction:column;gap:16px;min-width:0;overflow-y:auto;}
+.hp-root{display:flex;flex-direction:column;width:100%;height:100vh;overflow:hidden;overflow-x:hidden;}
+.hp-body{display:flex;flex:1;overflow:hidden;overflow-x:hidden;}
+.hp-main{flex:1;padding:24px 24px 32px;display:flex;flex-direction:column;gap:16px;min-width:0;overflow-y:auto;overflow-x:hidden;}
 
 /* 인사말 바 */
 .hp-top-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;}
@@ -424,15 +458,17 @@ html,body{width:100%;height:100%;cursor:none;font-family:var(--fn);background:va
 
 /* 콘텐츠 */
 .hp-content-row{display:grid;grid-template-columns:1fr 320px;gap:14px;flex:1;min-height:0;}
-.hp-center-col{display:flex;flex-direction:column;gap:14px;overflow-y:auto;}
-.hp-right-col{display:flex;flex-direction:column;gap:14px;overflow-y:auto;}
+.hp-center-col{display:flex;flex-direction:column;gap:14px;}
+.hp-right-col{display:flex;flex-direction:column;gap:14px;}
 
 /* 공통 카드 */
-.hp-card{background:#fff;border:0.8px solid var(--bd);border-radius:16px;box-shadow:var(--sh);padding:20px 22px;}
+.hp-card{background:#fff;border:0.8px solid var(--bd);border-radius:16px;box-shadow:var(--sh);padding:20px 22px; height:100%;}
 .hp-card-header{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
 .hp-card-title{font-size:17px;font-weight:700;color:var(--txt);}
 .hp-card-link{background:transparent;border:none;font-family:var(--fn);font-size:12px;font-weight:600;color:var(--p);cursor:none;display:flex;align-items:center;gap:4px;transition:opacity .2s;}
 .hp-card-link:hover{opacity:.7;}
+// .hp-quick-card{display:flex;justify-content:space-between;flex-direction:column;}
+// .hp-quick-grid{padding-bottom:90px;}
 
 /* 복약 일정 */
 .hp-schedule-list{display:flex;flex-direction:column;gap:0;}
@@ -502,4 +538,61 @@ html,body{width:100%;height:100%;cursor:none;font-family:var(--fn);background:va
 .hp-quick-btn:hover{background:var(--pl);border-color:var(--a1);transform:translateY(-2px);}
 .hp-quick-icon{font-size:22px;}
 .hp-quick-label{font-size:10px;font-weight:600;color:var(--sub);}
+
+/* 하단 탭바 */
+.hp-bottom-nav{display:flex;align-items:center;justify-content:space-around;background:#fff;border-top:1px solid var(--bd);padding:8px 0 max(8px, env(safe-area-inset-bottom));flex-shrink:0;z-index:100;}
+.hp-bottom-nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 12px;background:transparent;border:none;cursor:pointer;font-family:var(--fn);transition:all .15s;flex:1;}
+.hp-bottom-nav-icon{font-size:20px;line-height:1;}
+.hp-bottom-nav-label{font-size:10px;font-weight:600;color:var(--gray);}
+.hp-bottom-nav-btn.active .hp-bottom-nav-label{color:var(--p);}
+.hp-bottom-nav-btn.active .hp-bottom-nav-icon{filter:drop-shadow(0 0 4px rgba(124,58,237,.4));}
+
+/* ── 태블릿 (768px ~ 1023px) ── */
+@media(max-width:1023px){
+  .hp-card{height:100%;}
+  .hp-quick-grid{margin-top:60px;}
+  .hp-root{height:100dvh;overflow:hidden;display:flex;flex-direction:column;}
+  .hp-body{flex:1;overflow:hidden;}
+  .hp-main{overflow-y:auto;padding:16px 16px 90px;}
+  .hp-stat-row{grid-template-columns:repeat(2,1fr);}
+  .hp-content-row{grid-template-columns:1fr;}
+  .hp-right-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start;}
+  .hp-greeting-text{font-size:18px;}
+  .hp-greeting-sub{display:none;}
+}
+
+/* ── 모바일 (~ 767px) ── */
+@media(max-width:767px){
+  .hp-root{height:100dvh;overflow:hidden;display:flex;flex-direction:column;}
+  .hp-body{flex:1;overflow:hidden;}
+  .hp-main{overflow-y:auto;padding:12px 12px 90px;gap:12px;}
+  .hp-stat-row{grid-template-columns:repeat(2,1fr);gap:8px;}
+  .hp-stat-card{padding:12px 10px;gap:8px;}
+  .hp-stat-icon-wrap{width:40px;height:40px;border-radius:10px;}
+  .hp-stat-val{font-size:18px;}
+  .hp-stat-lbl{font-size:10px;}
+  .hp-stat-sub{display:none;}
+  .hp-stat-arr{display:none;}
+  .hp-content-row{grid-template-columns:1fr;}
+  .hp-right-col{display:flex;flex-direction:column;}
+  .hp-greeting-text{font-size:16px;}
+  .hp-greeting-sub{display:none;}
+  .hp-top-bar{gap:8px;}
+  .hp-date-chip{font-size:11px;padding:5px 10px;}
+  .hp-card{padding:14px 12px;width:100%;box-sizing:border-box;}
+  .hp-card-title{font-size:15px;}
+  .hp-sch-row{gap:8px;}
+  .hp-sch-time-col{width:60px;}
+  .hp-sch-pill-name{font-size:12px;}
+  .hp-sch-time{font-size:12px;}
+  .hp-sch-badge{padding:4px 8px;font-size:10px;}
+  .hp-alert-action{font-size:10px;}
+  .hp-week-check{width:18px;height:18px;font-size:8px;}
+  .hp-achieve-val{font-size:22px;}
+  .hp-status-tab{padding:3px 7px;font-size:10px;}
+  .hp-cursor,.hp-cursor-ring{display:none;}
+}
+  @media(max-width:767px){
+  .hp-quick-grid{margin-top:10px;}
+}
 `;

@@ -27,6 +27,17 @@ function useCursor() {
   return { cursor, ring };
 }
 
+/* ── useBreakpoint ── */
+function useBreakpoint() {
+  const [w, setW] = useState(typeof window !== "undefined" ? window.innerWidth : 1280);
+  useEffect(() => {
+    const fn = () => setW(window.innerWidth);
+    window.addEventListener("resize", fn);
+    return () => window.removeEventListener("resize", fn);
+  }, []);
+  return { isMobile: w < 768, isTablet: w >= 768 && w < 1024, isDesktop: w >= 1024 };
+}
+
 /* ── 사이드바 데이터 ── */
 const NAV_MAIN = [
   { icon: "🏠", label: "홈",        path: "/app/home"   },
@@ -53,26 +64,16 @@ function Sidebar({ activePath }) {
       padding: "24px 14px 20px",
       height: "100vh", position: "sticky", top: 0,
     }}>
-      {/* 로고 → 홈 */}
       <div
         onClick={() => navigate("/app/home")}
         onMouseEnter={e => e.currentTarget.style.opacity = ".75"}
         onMouseLeave={e => e.currentTarget.style.opacity = "1"}
-        style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 28, cursor: "none", transition: "opacity .2s" }}
+        style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 28, cursor: "pointer", transition: "opacity .2s" }}
       >
-        <div style={{
-          width: 34, height: 34,
-          background: "linear-gradient(135deg,#a78bfa,#f9a8d4)",
-          borderRadius: 10, display: "flex", alignItems: "center",
-          justifyContent: "center", fontSize: 17,
-          boxShadow: "0 4px 12px rgba(167,139,250,.4)",
-        }}>💊</div>
-        <span style={{ fontSize: 16, fontWeight: 800, color: "#1a1433", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-          MediPocket
-        </span>
+        <div style={{ width: 34, height: 34, background: "linear-gradient(135deg,#a78bfa,#f9a8d4)", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 17, boxShadow: "0 4px 12px rgba(167,139,250,.4)" }}>💊</div>
+        <span style={{ fontSize: 16, fontWeight: 800, color: "#1a1433", fontFamily: "var(--fn)" }}>MediPocket</span>
       </div>
 
-      {/* 메인 메뉴 */}
       <div style={{ fontSize: 11, fontWeight: 600, color: "#b0a8c8", letterSpacing: "0.06em", textTransform: "uppercase", padding: "0 8px", marginBottom: 6 }}>메인</div>
       <nav style={{ display: "flex", flexDirection: "column", gap: 2, marginBottom: 14 }}>
         {NAV_MAIN.map(item => {
@@ -82,10 +83,10 @@ function Sidebar({ activePath }) {
               display: "flex", alignItems: "center", gap: 10,
               padding: "9px 10px", borderRadius: 10, border: "none",
               background: isActive ? "#ede9fe" : "transparent",
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-              fontSize: 13, fontWeight: isActive ? 700 : 500,
+              fontFamily: "var(--fn)", fontSize: 13,
+              fontWeight: isActive ? 700 : 500,
               color: isActive ? "#7c3aed" : "#6b7280",
-              cursor: "none", textAlign: "left", width: "100%", transition: "all .15s",
+              cursor: "pointer", textAlign: "left", width: "100%", transition: "all .15s",
             }}>
               <span style={{ fontSize: 15, width: 20, textAlign: "center" }}>{item.icon}</span>
               <span>{item.label}</span>
@@ -94,7 +95,6 @@ function Sidebar({ activePath }) {
         })}
       </nav>
 
-      {/* 관리 메뉴 */}
       <div style={{ fontSize: 11, fontWeight: 600, color: "#b0a8c8", letterSpacing: "0.06em", textTransform: "uppercase", padding: "0 8px", marginBottom: 6 }}>관리</div>
       <nav style={{ display: "flex", flexDirection: "column", gap: 2 }}>
         {NAV_MANAGE.map(item => {
@@ -104,18 +104,15 @@ function Sidebar({ activePath }) {
               display: "flex", alignItems: "center", gap: 10,
               padding: "9px 10px", borderRadius: 10, border: "none",
               background: isActive ? "#ede9fe" : "transparent",
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-              fontSize: 13, fontWeight: isActive ? 700 : 500,
+              fontFamily: "var(--fn)", fontSize: 13,
+              fontWeight: isActive ? 700 : 500,
               color: isActive ? "#7c3aed" : "#6b7280",
-              cursor: "none", textAlign: "left", width: "100%", transition: "all .15s",
+              cursor: "pointer", textAlign: "left", width: "100%", transition: "all .15s",
             }}>
               <span style={{ fontSize: 15, width: 20, textAlign: "center" }}>{item.icon}</span>
               <span>{item.label}</span>
               {item.badge && (
-                <span style={{
-                  marginLeft: "auto", background: "#ef4444", color: "#fff",
-                  fontSize: 10, fontWeight: 700, borderRadius: 50, padding: "1px 7px",
-                }}>{item.badge}</span>
+                <span style={{ marginLeft: "auto", background: "#ef4444", color: "#fff", fontSize: 10, fontWeight: 700, borderRadius: 50, padding: "1px 7px" }}>{item.badge}</span>
               )}
             </button>
           );
@@ -124,29 +121,49 @@ function Sidebar({ activePath }) {
 
       <div style={{ flex: 1 }} />
 
-      {/* 하단 프로필 → 설정 */}
       <div
         onClick={() => navigate("/app/setting")}
         onMouseEnter={e => e.currentTarget.style.opacity = ".75"}
         onMouseLeave={e => e.currentTarget.style.opacity = "1"}
-        style={{
-          display: "flex", alignItems: "center", gap: 10,
-          padding: "10px 8px", borderTop: "1px solid #e9e7f5",
-          marginTop: 12, cursor: "none", transition: "opacity .2s",
-        }}
+        style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 8px", borderTop: "1px solid #e9e7f5", marginTop: 12, cursor: "pointer", transition: "opacity .2s" }}
       >
-        <div style={{
-          width: 34, height: 34, borderRadius: "50%",
-          background: "linear-gradient(135deg,#a78bfa,#7c3aed)",
-          color: "#fff", fontSize: 11, fontWeight: 700,
-          display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
-        }}>메디</div>
+        <div style={{ width: 34, height: 34, borderRadius: "50%", background: "linear-gradient(135deg,#a78bfa,#7c3aed)", color: "#fff", fontSize: 11, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>메디</div>
         <div>
-          <div style={{ fontSize: 13, fontWeight: 700, color: "#1a1433", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>메디포</div>
+          <div style={{ fontSize: 13, fontWeight: 700, color: "#1a1433", fontFamily: "var(--fn)" }}>메디포</div>
           <div style={{ fontSize: 11, color: "#9ca3af" }}>개발자</div>
         </div>
       </div>
     </aside>
+  );
+}
+
+/* ════════════════
+   하단 탭바 (모바일)
+════════════════ */
+function BottomNav({ activePath }) {
+  const navigate = useNavigate();
+  return (
+    <nav style={{
+      display: "flex", alignItems: "center", justifyContent: "space-around",
+      background: "#fff", borderTop: "1px solid #e9e7f5",
+      padding: "8px 0 max(8px, env(safe-area-inset-bottom))",
+      position: "fixed", bottom: 0, left: 0, right: 0,
+      zIndex: 1000,
+    }}>
+      {NAV_MAIN.map(item => {
+        const isActive = activePath === item.path;
+        return (
+          <button key={item.path} onClick={() => navigate(item.path)} style={{
+            display: "flex", flexDirection: "column", alignItems: "center", gap: 3,
+            padding: "4px 12px", background: "transparent", border: "none",
+            cursor: "pointer", fontFamily: "var(--fn)", transition: "all .15s", flex: 1,
+          }}>
+            <span style={{ fontSize: 20, lineHeight: 1, filter: isActive ? "drop-shadow(0 0 4px rgba(124,58,237,.4))" : "none" }}>{item.icon}</span>
+            <span style={{ fontSize: 10, fontWeight: 600, color: isActive ? "#7c3aed" : "#9ca3af" }}>{item.label}</span>
+          </button>
+        );
+      })}
+    </nav>
   );
 }
 
@@ -156,7 +173,7 @@ function Sidebar({ activePath }) {
 function Toast({ message, visible }) {
   return (
     <div style={{
-      position: "fixed", bottom: 32, left: "50%", transform: "translateX(-50%)",
+      position: "fixed", bottom: 80, left: "50%", transform: "translateX(-50%)",
       background: "#1a1433", color: "#fff",
       padding: "12px 24px", borderRadius: 50,
       fontSize: 13, fontWeight: 600,
@@ -165,7 +182,7 @@ function Toast({ message, visible }) {
       opacity: visible ? 1 : 0,
       transition: "opacity 0.3s ease",
       whiteSpace: "nowrap",
-      fontFamily: "'Plus Jakarta Sans', sans-serif",
+      fontFamily: "var(--fn)",
     }}>
       {message}
     </div>
@@ -185,13 +202,95 @@ const getOtcLabel = (code) => {
 const FILTERS = ["전체", "일반의약품", "전문의약품", "건강기능식품", "성분 검색"];
 
 /* ════════════════
+   약 상세 컨텐츠 (공용)
+════════════════ */
+function DrugDetailContent({ selected, aiQuestion, setAiQuestion, aiLoading, aiAnswer, handleAiAsk, handleAddToCabinet, navigate }) {
+  return (
+    <>
+      {/* 약 기본 정보 */}
+      <div className="sp-drug-top">
+        <div className="sp-drug-icon">💊</div>
+        <div style={{ flex: 1 }}>
+          <div className="sp-drug-name">{selected.ITEM_NAME}</div>
+          <div className="sp-drug-company">{selected.ENTP_NAME}</div>
+          <span className={`sp-tag ${selected.ETC_OTC_CODE?.includes("일반") ? "otc" : "rx"}`}>
+            {getOtcLabel(selected.ETC_OTC_CODE)}
+          </span>
+        </div>
+      </div>
+
+      {/* 효능·효과 */}
+      {selected.EFCY_QESITM && (
+        <div className="sp-section">
+          <div className="sp-section-ttl"><div className="sp-dot" />효능·효과</div>
+          <p className="sp-section-txt">
+            {selected.EFCY_QESITM.slice(0, 300)}{selected.EFCY_QESITM.length > 300 ? "..." : ""}
+          </p>
+        </div>
+      )}
+
+      {/* 주의사항 */}
+      {selected.ATPN_QESITM && (
+        <div className="sp-section">
+          <div className="sp-section-ttl"><div className="sp-dot" />주의사항</div>
+          <div className="sp-warn-box">
+            <span>⚠️</span>
+            <span>{selected.ATPN_QESITM.slice(0, 200)}{selected.ATPN_QESITM.length > 200 ? "..." : ""}</span>
+          </div>
+        </div>
+      )}
+
+      {/* 근거 출처 */}
+      <div className="sp-evidence">
+        <span>📄</span>
+        <div>
+          <div className="sp-ev-title">근거 출처 (Evidence Card)</div>
+          <div className="sp-ev-sub">식약처 DUR 품목 정보 · e약은요 · 확신도 High</div>
+        </div>
+      </div>
+
+      {/* AI 복약 분석 */}
+      <div className="sp-section">
+        <div className="sp-section-ttl"><div className="sp-dot" />AI 복약 분석</div>
+        <div className="sp-ai-row">
+          <input
+            className="sp-ai-input"
+            type="text"
+            value={aiQuestion}
+            onChange={e => setAiQuestion(e.target.value)}
+            onKeyDown={e => e.key === "Enter" && handleAiAsk()}
+            placeholder="예: 임산부가 먹어도 돼? / 부작용이 뭐야?"
+          />
+          <button className="sp-ai-btn" onClick={handleAiAsk} disabled={aiLoading}>
+            {aiLoading ? "..." : "분석"}
+          </button>
+        </div>
+        {aiLoading && <div className="sp-ai-loading">분석 중...</div>}
+        {aiAnswer && !aiLoading && (
+          <div className="sp-ai-answer">
+            <div className="sp-ai-label">🤖 AI 답변</div>
+            <p>{aiAnswer}</p>
+          </div>
+        )}
+      </div>
+
+      {/* 액션 버튼 */}
+      <div className="sp-actions">
+        <button className="sp-btn-add" onClick={handleAddToCabinet}>+ 내 약함에 추가</button>
+        <button className="sp-btn-check" onClick={() => navigate("/app/check")}>병용 확인</button>
+      </div>
+    </>
+  );
+}
+
+/* ════════════════
    메인
 ════════════════ */
 export default function SearchPage() {
   const navigate = useNavigate();
   const { cursor, ring } = useCursor();
+  const { isMobile, isTablet, isDesktop } = useBreakpoint();
 
-  /* ── state 선언 (순서 중요!) ── */
   const [searchName,    setSearchName   ] = useState("");
   const [results,       setResults      ] = useState([]);
   const [selected,      setSelected     ] = useState(null);
@@ -205,9 +304,9 @@ export default function SearchPage() {
   const [searchFocused, setSearchFocused] = useState(false);
   const [toastMsg,      setToastMsg     ] = useState("");
   const [toastVisible,  setToastVisible ] = useState(false);
+  const [sheetOpen,     setSheetOpen    ] = useState(false); // 모바일 바텀시트
   const toastTimer = useRef(null);
 
-  /* ── 필터 적용 (state 선언 후에 위치) ── */
   const filteredResults = results.filter(item => {
     if (filter === "전체") return true;
     if (filter === "일반의약품") return item.ETC_OTC_CODE?.includes("일반");
@@ -217,7 +316,6 @@ export default function SearchPage() {
     return true;
   });
 
-  /* 토스트 표시 */
   const showToast = (msg) => {
     setToastMsg(msg);
     setToastVisible(true);
@@ -225,7 +323,6 @@ export default function SearchPage() {
     toastTimer.current = setTimeout(() => setToastVisible(false), 2500);
   };
 
-  /* ── 약 검색 ── */
   const handleSearch = async (nameOverride = null) => {
     const query = nameOverride || searchName;
     if (!query.trim()) return;
@@ -235,7 +332,7 @@ export default function SearchPage() {
     setSuggestions([]);
     setNoResult(false);
     setResults([]);
-    setFilter("전체"); // 검색 시 필터 초기화
+    setFilter("전체");
     try {
       const res  = await fetch(`${API_BASE}/drug/search?name=${encodeURIComponent(query)}&limit=50`);
       const data = await res.json();
@@ -254,7 +351,6 @@ export default function SearchPage() {
     }
   };
 
-  /* ── 퍼지 추천 클릭 ── */
   const handleSuggestionClick = (name) => {
     setSearchName(name);
     setSuggestions([]);
@@ -262,7 +358,6 @@ export default function SearchPage() {
     handleSearch(name);
   };
 
-  /* ── 약 상세 조회 ── */
   const handleSelect = async (item) => {
     try {
       const res  = await fetch(`${API_BASE}/drug/info/${item.ITEM_SEQ}`);
@@ -273,9 +368,10 @@ export default function SearchPage() {
     } catch {
       setSelected(item);
     }
+    // 모바일/태블릿이면 바텀시트 열기
+    if (!isDesktop) setSheetOpen(true);
   };
 
-  /* ── AI 질문 ── */
   const handleAiAsk = async () => {
     if (!aiQuestion.trim() || !selected) return;
     setAiLoading(true);
@@ -292,7 +388,6 @@ export default function SearchPage() {
     }
   };
 
-  /* ── 내 약함에 추가 ── */
   const handleAddToCabinet = () => {
     if (!selected) return;
     const existing  = JSON.parse(localStorage.getItem("cabinet") || "[]");
@@ -312,25 +407,38 @@ export default function SearchPage() {
     showToast(`✅ "${selected.ITEM_NAME}" 이 내 약함에 추가됐어요!`);
   };
 
+  const px = isDesktop ? 22 : isTablet ? 20 : 16;
+
   return (
     <>
       <style>{CSS}</style>
-      <div className="sp-cursor"      style={{ left: cursor.x, top: cursor.y }} />
-      <div className="sp-cursor-ring" style={{ left: ring.x,   top: ring.y   }} />
+
+      {/* 커스텀 커서 — 데스크탑만 */}
+      {isDesktop && (
+        <>
+          <div className="sp-cursor"      style={{ left: cursor.x, top: cursor.y }} />
+          <div className="sp-cursor-ring" style={{ left: ring.x,   top: ring.y   }} />
+        </>
+      )}
+
       <Toast message={toastMsg} visible={toastVisible} />
 
       <div className="sp-root">
-        <Sidebar activePath="/app/search" />
+        {/* 사이드바: 태블릿 + 데스크탑 */}
+        {isDesktop && <Sidebar activePath="/app/search" />}
 
         <div className="sp-body">
 
-          {/* 검색 헤더 */}
-          <div className="sp-search-header">
+          {/* ── 검색 헤더 ── */}
+          <div className="sp-search-header" style={{ padding: `${isMobile ? 16 : 20}px ${px}px 0` }}>
             <div className="sp-search-card">
-              <div className="sp-search-title">
-                <span>💊</span>
-                <span>약 · 건강기능식품 검색</span>
-              </div>
+              {/* 타이틀 — 모바일에서 간소화 */}
+              {!isMobile && (
+                <div className="sp-search-title">
+                  <span>💊</span>
+                  <span>약 · 건강기능식품 검색</span>
+                </div>
+              )}
 
               <div className="sp-bar-wrap">
                 <span className="sp-bar-icon">🔍</span>
@@ -359,18 +467,20 @@ export default function SearchPage() {
                 ))}
               </div>
 
-              <div className="sp-hint">
-                <span>💡</span>
-                <span>검색 후 필터로 의약품 종류를 구분할 수 있어요</span>
-              </div>
+              {!isMobile && (
+                <div className="sp-hint">
+                  <span>💡</span>
+                  <span>검색 후 필터로 의약품 종류를 구분할 수 있어요</span>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* 결과 + 상세 */}
-          <div className="sp-content">
+          {/* ── 결과 + 상세 ── */}
+          <div className="sp-content" style={{ padding: `14px ${px}px ${isMobile ? 96 : 22}px`, gap: isDesktop ? 14 : 10 }}>
 
-            {/* 왼쪽 결과 목록 */}
-            <div className="sp-list">
+            {/* 결과 목록 */}
+            <div className="sp-list" style={{ width: isDesktop ? 320 : "100%", flex: isDesktop ? "none" : 1 }}>
               <div className="sp-list-count">
                 {loading
                   ? "검색 중..."
@@ -379,7 +489,7 @@ export default function SearchPage() {
                   : noResult
                   ? "검색 결과가 없습니다"
                   : results.length > 0
-                  ? `필터 결과 없음`
+                  ? "필터 결과 없음"
                   : "검색어를 입력하세요"}
               </div>
 
@@ -394,11 +504,7 @@ export default function SearchPage() {
                     <>
                       <div className="sp-suggest-label">혹시 이 약을 찾으셨나요?</div>
                       {suggestions.map((s, i) => (
-                        <div
-                          key={i}
-                          className="sp-suggest-row"
-                          onClick={() => handleSuggestionClick(s.item_name)}
-                        >
+                        <div key={i} className="sp-suggest-row" onClick={() => handleSuggestionClick(s.item_name)}>
                           <span>🔍</span>
                           <span className="sp-suggest-name">{s.item_name}</span>
                           <span>›</span>
@@ -409,7 +515,7 @@ export default function SearchPage() {
                 </div>
               )}
 
-              {/* 검색 결과 — filteredResults 사용 */}
+              {/* 검색 결과 */}
               {filteredResults.map(item => (
                 <div
                   key={item.ITEM_SEQ}
@@ -428,103 +534,81 @@ export default function SearchPage() {
               ))}
             </div>
 
-            {/* 오른쪽 상세 패널 */}
-            <div className="sp-detail">
-              {!selected ? (
-                <div className="sp-detail-empty">
-                  <div style={{ fontSize: 48, marginBottom: 14 }}>💊</div>
-                  <p>약을 선택하면<br />상세 정보가 표시됩니다</p>
-                </div>
-              ) : (
-                <>
-                  {/* 약 기본 정보 */}
-                  <div className="sp-drug-top">
-                    <div className="sp-drug-icon">💊</div>
-                    <div style={{ flex: 1 }}>
-                      <div className="sp-drug-name">{selected.ITEM_NAME}</div>
-                      <div className="sp-drug-company">{selected.ENTP_NAME}</div>
-                      <span className={`sp-tag ${selected.ETC_OTC_CODE?.includes("일반") ? "otc" : "rx"}`}>
-                        {getOtcLabel(selected.ETC_OTC_CODE)}
-                      </span>
-                    </div>
+            {/* 오른쪽 상세 패널 — 데스크탑만 */}
+            {isDesktop && (
+              <div className="sp-detail">
+                {!selected ? (
+                  <div className="sp-detail-empty">
+                    <div style={{ fontSize: 48, marginBottom: 14 }}>💊</div>
+                    <p>약을 선택하면<br />상세 정보가 표시됩니다</p>
                   </div>
-
-                  {/* 효능·효과 */}
-                  {selected.EFCY_QESITM && (
-                    <div className="sp-section">
-                      <div className="sp-section-ttl"><div className="sp-dot" />효능·효과</div>
-                      <p className="sp-section-txt">
-                        {selected.EFCY_QESITM.slice(0, 300)}
-                        {selected.EFCY_QESITM.length > 300 ? "..." : ""}
-                      </p>
-                    </div>
-                  )}
-
-                  {/* 주의사항 */}
-                  {selected.ATPN_QESITM && (
-                    <div className="sp-section">
-                      <div className="sp-section-ttl"><div className="sp-dot" />주의사항</div>
-                      <div className="sp-warn-box">
-                        <span>⚠️</span>
-                        <span>
-                          {selected.ATPN_QESITM.slice(0, 200)}
-                          {selected.ATPN_QESITM.length > 200 ? "..." : ""}
-                        </span>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* 근거 출처 */}
-                  <div className="sp-evidence">
-                    <span>📄</span>
-                    <div>
-                      <div className="sp-ev-title">근거 출처 (Evidence Card)</div>
-                      <div className="sp-ev-sub">식약처 DUR 품목 정보 · e약은요 · 확신도 High</div>
-                    </div>
-                  </div>
-
-                  {/* AI 복약 분석 */}
-                  <div className="sp-section">
-                    <div className="sp-section-ttl"><div className="sp-dot" />AI 복약 분석</div>
-                    <div className="sp-ai-row">
-                      <input
-                        className="sp-ai-input"
-                        type="text"
-                        value={aiQuestion}
-                        onChange={e => setAiQuestion(e.target.value)}
-                        onKeyDown={e => e.key === "Enter" && handleAiAsk()}
-                        placeholder="예: 임산부가 먹어도 돼? / 부작용이 뭐야?"
-                      />
-                      <button className="sp-ai-btn" onClick={handleAiAsk} disabled={aiLoading}>
-                        {aiLoading ? "..." : "분석"}
-                      </button>
-                    </div>
-                    {aiLoading && (
-                      <div className="sp-ai-loading">분석 중...</div>
-                    )}
-                    {aiAnswer && !aiLoading && (
-                      <div className="sp-ai-answer">
-                        <div className="sp-ai-label">🤖 AI 답변</div>
-                        <p>{aiAnswer}</p>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* 액션 버튼 */}
-                  <div className="sp-actions">
-                    <button className="sp-btn-add" onClick={handleAddToCabinet}>
-                      + 내 약함에 추가
-                    </button>
-                    <button className="sp-btn-check" onClick={() => navigate("/app/check")}>
-                      병용 확인
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
+                ) : (
+                  <DrugDetailContent
+                    selected={selected}
+                    aiQuestion={aiQuestion} setAiQuestion={setAiQuestion}
+                    aiLoading={aiLoading} aiAnswer={aiAnswer}
+                    handleAiAsk={handleAiAsk}
+                    handleAddToCabinet={handleAddToCabinet}
+                    navigate={navigate}
+                  />
+                )}
+              </div>
+            )}
           </div>
         </div>
+
+        {/* 하단 탭바 — 모바일만 */}
+        {!isDesktop && <BottomNav activePath="/app/search" />}
       </div>
+
+      {/* 바텀시트 — 모바일 + 태블릿 */}
+      {!isDesktop && (
+        <>
+          {/* 딤 배경 */}
+          <div
+            onClick={() => setSheetOpen(false)}
+            style={{
+              position: "fixed", inset: 0, background: "rgba(0,0,0,0.3)",
+              zIndex: 1100, opacity: sheetOpen ? 1 : 0,
+              pointerEvents: sheetOpen ? "auto" : "none",
+              transition: "opacity 0.3s",
+            }}
+          />
+          {/* 시트 본체 */}
+          <div style={{
+            position: "fixed", bottom: 0, left: 0, right: 0,
+            background: "#fff", borderRadius: "28px 28px 0 0",
+            borderTop: "0.8px solid #e9e7f5",
+            padding: "0 20px 100px",
+            zIndex: 1101, maxHeight: "88vh", overflowY: "auto",
+            transform: sheetOpen ? "translateY(0)" : "translateY(100%)",
+            transition: "transform 0.32s cubic-bezier(0.32,0.72,0,1)",
+          }}>
+            {/* 핸들 */}
+            <div style={{ width: 36, height: 4, borderRadius: 2, background: "#d1d5db", margin: "12px auto 20px" }} />
+
+            {selected ? (
+              <DrugDetailContent
+                selected={selected}
+                aiQuestion={aiQuestion} setAiQuestion={setAiQuestion}
+                aiLoading={aiLoading} aiAnswer={aiAnswer}
+                handleAiAsk={handleAiAsk}
+                handleAddToCabinet={handleAddToCabinet}
+                navigate={navigate}
+              />
+            ) : (
+              <div style={{ textAlign: "center", padding: "40px 0", color: "#9ca3af", fontSize: 13 }}>
+                약을 선택하면 상세 정보가 표시됩니다
+              </div>
+            )}
+
+            <button
+              onClick={() => setSheetOpen(false)}
+              style={{ width: "100%", marginTop: 16, padding: 14, background: "#ede9fe", border: "none", borderRadius: 14, fontSize: 14, fontWeight: 700, color: "#7c3aed", cursor: "pointer", fontFamily: "var(--fn)" }}
+            >닫기</button>
+          </div>
+        </>
+      )}
     </>
   );
 }
@@ -533,14 +617,15 @@ export default function SearchPage() {
    CSS
 ════════════════ */
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700;800&display=swap');
 *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
 :root {
   --p:#7c3aed; --pl:#ede9fe; --a1:#a78bfa; --a2:#f9a8d4;
   --txt:#1a1433; --sub:#6b5f8a; --gray:#9ca3af; --bd:#e9e7f5;
-  --bg:#f0effa; --fn:'Plus Jakarta Sans',sans-serif;
+  --bg:#f0effa; --fn:'Plus Jakarta Sans','Noto Sans KR',sans-serif;
 }
-html,body { width:100%; height:100%; cursor:none; font-family:var(--fn); background:var(--bg); overflow:hidden; }
+html,body { width:100%; height:100%; font-family:var(--fn); background:var(--bg); overflow:hidden; }
+@media(min-width:1024px){ html,body { cursor:none; } }
 
 .sp-cursor { width:10px; height:10px; border-radius:50%; background:var(--a1); position:fixed; z-index:9999; pointer-events:none; transform:translate(-50%,-50%); mix-blend-mode:multiply; }
 .sp-cursor-ring { width:32px; height:32px; border-radius:50%; border:1px solid var(--a1); position:fixed; z-index:9998; pointer-events:none; transform:translate(-50%,-50%); opacity:.4; }
@@ -548,35 +633,37 @@ html,body { width:100%; height:100%; cursor:none; font-family:var(--fn); backgro
 .sp-root { display:flex; width:100%; height:100vh; overflow:hidden; }
 .sp-body { flex:1; display:flex; flex-direction:column; overflow:hidden; min-width:0; }
 
-.sp-search-header { padding:20px 22px 0; flex-shrink:0; }
-.sp-search-card { background:#fff; border:1px solid var(--bd); border-radius:16px; padding:18px 20px; box-shadow:0 1px 4px rgba(120,80,200,.07); }
+.sp-search-header { flex-shrink:0; }
+.sp-search-card { background:#fff; border:1px solid var(--bd); border-radius:16px; padding:14px 16px; box-shadow:0 1px 4px rgba(120,80,200,.07); }
 .sp-search-title { display:flex; align-items:center; gap:10px; font-size:17px; font-weight:700; color:var(--txt); margin-bottom:12px; }
 
 .sp-bar-wrap { position:relative; margin-bottom:10px; }
 .sp-bar-icon { position:absolute; left:13px; top:50%; transform:translateY(-50%); font-size:15px; }
 .sp-bar-input { width:100%; height:42px; border-radius:11px; border:none; background:#f9f8ff; padding:0 76px 0 40px; font-size:13px; color:var(--txt); outline:none; box-sizing:border-box; font-family:var(--fn); transition:box-shadow .2s; }
-.sp-bar-btn { position:absolute; right:4px; top:4px; height:34px; width:58px; border-radius:9px; background:var(--p); border:none; color:#fff; font-weight:600; font-size:13px; cursor:none; font-family:var(--fn); transition:transform .15s; }
+.sp-bar-btn { position:absolute; right:4px; top:4px; height:34px; width:58px; border-radius:9px; background:var(--p); border:none; color:#fff; font-weight:600; font-size:13px; cursor:pointer; font-family:var(--fn); transition:transform .15s; }
 .sp-bar-btn:hover { transform:scale(1.03); }
 
 .sp-filters { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px; }
-.sp-chip { padding:5px 13px; border-radius:50px; border:1px solid var(--bd); background:transparent; color:var(--gray); font-size:12px; font-weight:500; cursor:none; font-family:var(--fn); transition:all .15s; }
+.sp-chip { padding:5px 13px; border-radius:50px; border:1px solid var(--bd); background:transparent; color:var(--gray); font-size:12px; font-weight:500; cursor:pointer; font-family:var(--fn); transition:all .15s; }
 .sp-chip.active { background:#eef2ff; color:var(--p); font-weight:600; border-color:transparent; }
 
 .sp-hint { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--gray); }
 
-.sp-content { display:flex; flex:1; overflow:hidden; padding:14px 22px 22px; gap:14px; }
+/* 결과 영역 */
+.sp-content { display:flex; flex:1; overflow:hidden; gap:14px; }
 
-.sp-list { width:320px; flex-shrink:0; overflow-y:auto; display:flex; flex-direction:column; gap:6px; }
+/* 데스크탑: 리스트 고정폭 / 모바일·태블릿: 전체 너비 */
+.sp-list { overflow-y:auto; display:flex; flex-direction:column; gap:6px; }
 .sp-list-count { font-size:12px; font-weight:600; color:var(--gray); margin-bottom:4px; flex-shrink:0; }
 
 .sp-no-result { background:#fff; border:1px solid var(--bd); border-radius:14px; padding:24px 20px; text-align:center; }
 .sp-no-text { font-size:13px; color:var(--sub); margin-bottom:14px; line-height:1.6; }
 .sp-suggest-label { font-size:11px; font-weight:600; color:var(--gray); margin-bottom:8px; }
-.sp-suggest-row { display:flex; align-items:center; gap:8px; padding:10px 12px; background:#f9f8ff; border-radius:10px; cursor:none; transition:background .15s; margin-bottom:4px; }
+.sp-suggest-row { display:flex; align-items:center; gap:8px; padding:10px 12px; background:#f9f8ff; border-radius:10px; cursor:pointer; transition:background .15s; margin-bottom:4px; }
 .sp-suggest-row:hover { background:var(--pl); }
 .sp-suggest-name { flex:1; font-size:12px; font-weight:600; color:var(--txt); text-align:left; }
 
-.sp-result-row { display:flex; align-items:center; gap:10px; background:#fff; border:1px solid var(--bd); border-radius:13px; padding:13px 14px; cursor:none; transition:all .2s; }
+.sp-result-row { display:flex; align-items:center; gap:10px; background:#fff; border:1px solid var(--bd); border-radius:13px; padding:13px 14px; cursor:pointer; transition:all .2s; }
 .sp-result-row:hover { border-color:#a78bfa; transform:translateY(-1px); box-shadow:0 4px 12px rgba(120,80,200,.1); }
 .sp-result-row.selected { border-color:var(--p); box-shadow:0 0 0 3px rgba(124,58,237,.12); }
 .sp-result-icon { width:34px; height:34px; border-radius:9px; background:var(--pl); display:flex; align-items:center; justify-content:center; font-size:17px; flex-shrink:0; }
@@ -587,6 +674,7 @@ html,body { width:100%; height:100%; cursor:none; font-family:var(--fn); backgro
 .sp-tag.otc { background:#f0fdf4; color:#16a34a; }
 .sp-tag.rx  { background:#fef2f2; color:#ef4444; }
 
+/* 데스크탑 상세 패널 */
 .sp-detail { flex:1; background:#fff; border:1px solid var(--bd); border-radius:16px; overflow-y:auto; padding:22px; }
 .sp-detail-empty { height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--gray); text-align:center; line-height:1.7; font-size:13px; }
 
@@ -608,20 +696,36 @@ html,body { width:100%; height:100%; cursor:none; font-family:var(--fn); backgro
 .sp-ai-row { display:flex; gap:6px; margin-bottom:8px; }
 .sp-ai-input { flex:1; height:40px; border-radius:10px; border:1px solid var(--bd); background:#f9f8ff; padding:0 12px; font-size:12px; color:var(--txt); outline:none; font-family:var(--fn); transition:border-color .2s; }
 .sp-ai-input:focus { border-color:var(--a1); box-shadow:0 0 0 2px rgba(167,139,250,.15); }
-.sp-ai-btn { height:40px; padding:0 16px; border-radius:10px; background:var(--p); border:none; color:#fff; font-size:12px; font-weight:600; cursor:none; font-family:var(--fn); flex-shrink:0; transition:opacity .2s; }
+.sp-ai-btn { height:40px; padding:0 16px; border-radius:10px; background:var(--p); border:none; color:#fff; font-size:12px; font-weight:600; cursor:pointer; font-family:var(--fn); flex-shrink:0; transition:opacity .2s; }
 .sp-ai-btn:disabled { opacity:.6; }
 .sp-ai-loading { font-size:12px; color:var(--a1); margin-bottom:6px; }
 .sp-ai-answer { background:#faf5ff; border:1px solid #e9d5ff; border-radius:10px; padding:12px 14px; font-size:12px; color:#4b5563; line-height:1.7; }
 .sp-ai-label { font-size:11px; font-weight:700; color:var(--p); margin-bottom:6px; }
 
 .sp-actions { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:4px; }
-.sp-btn-add { padding:12px; border-radius:12px; background:var(--p); border:none; color:#fff; font-weight:700; font-size:13px; cursor:none; font-family:var(--fn); box-shadow:0 4px 12px rgba(124,58,237,.3); transition:transform .15s, box-shadow .15s; }
+.sp-btn-add { padding:12px; border-radius:12px; background:var(--p); border:none; color:#fff; font-weight:700; font-size:13px; cursor:pointer; font-family:var(--fn); box-shadow:0 4px 12px rgba(124,58,237,.3); transition:transform .15s,box-shadow .15s; }
 .sp-btn-add:hover { transform:translateY(-1px); box-shadow:0 6px 18px rgba(124,58,237,.4); }
-.sp-btn-check { padding:12px; border-radius:12px; background:#f9f8ff; border:1px solid var(--bd); color:var(--sub); font-weight:700; font-size:13px; cursor:none; font-family:var(--fn); transition:background .15s; }
+.sp-btn-check { padding:12px; border-radius:12px; background:#f9f8ff; border:1px solid var(--bd); color:var(--sub); font-weight:700; font-size:13px; cursor:pointer; font-family:var(--fn); transition:background .15s; }
 .sp-btn-check:hover { background:var(--pl); color:var(--p); }
 
 ::-webkit-scrollbar { width:4px; }
 ::-webkit-scrollbar-track { background:transparent; }
 ::-webkit-scrollbar-thumb { background:rgba(167,139,250,.3); border-radius:2px; }
 ::-webkit-scrollbar-thumb:hover { background:rgba(124,58,237,.4); }
+
+/* ── 모바일 375px ── */
+@media(max-width:767px){
+  .sp-search-card { border-radius:12px; padding:12px 14px; }
+  .sp-bar-input { font-size:14px; height:44px; }
+  .sp-bar-btn { height:36px; top:4px; }
+  .sp-chip { font-size:11px; padding:4px 10px; }
+  .sp-result-row { padding:11px 12px; }
+  .sp-result-name { font-size:12px; }
+}
+
+/* ── 태블릿 768px ── */
+@media(min-width:768px) and (max-width:1023px){
+  .sp-search-card { padding:16px 18px; }
+  .sp-content { padding-bottom: 22px !important; }
+}
 `;

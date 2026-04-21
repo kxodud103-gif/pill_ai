@@ -1,5 +1,40 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+
+/* ── 커스텀 커서 ── */
+function useCursor() {
+  const [cursor, setCursor] = useState({ x: -200, y: -200 });
+  const [ring,   setRing  ] = useState({ x: -200, y: -200 });
+  const ringPos = useRef({ x: -200, y: -200 });
+  const raf     = useRef(null);
+  useEffect(() => {
+    const fn = e => setCursor({ x: e.clientX, y: e.clientY });
+    window.addEventListener("mousemove", fn);
+    return () => window.removeEventListener("mousemove", fn);
+  }, []);
+  useEffect(() => {
+    const tick = () => {
+      ringPos.current.x += (cursor.x - ringPos.current.x) * 0.14;
+      ringPos.current.y += (cursor.y - ringPos.current.y) * 0.14;
+      setRing({ x: ringPos.current.x, y: ringPos.current.y });
+      raf.current = requestAnimationFrame(tick);
+    };
+    raf.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf.current);
+  }, [cursor]);
+  return { cursor, ring };
+}
+
+/* ── useBreakpoint ── */
+function useBreakpoint() {
+  const [w, setW] = useState(typeof window !== "undefined" ? window.innerWidth : 1280);
+  useEffect(() => {
+    const fn = () => setW(window.innerWidth);
+    window.addEventListener("resize", fn);
+    return () => window.removeEventListener("resize", fn);
+  }, []);
+  return { isMobile: w < 768, isTablet: w >= 768 && w < 1024, isDesktop: w >= 1024 };
+}
 
 /* ── 토글 ── */
 function Toggle({ on, onChange }) {
@@ -10,14 +45,11 @@ function Toggle({ on, onChange }) {
         width: 44, height: 24, borderRadius: 12,
         background: on ? "#7c3aed" : "#e9e7f5",
         display: "flex", alignItems: "center", padding: "0 3px",
-        cursor: "none", transition: "background 0.2s", flexShrink: 0,
+        cursor: "pointer", transition: "background 0.2s", flexShrink: 0,
         justifyContent: on ? "flex-end" : "flex-start",
       }}
     >
-      <div style={{
-        width: 18, height: 18, borderRadius: 9, background: "#fff",
-        boxShadow: "0 1px 4px rgba(0,0,0,0.2)", transition: "all 0.2s",
-      }} />
+      <div style={{ width: 18, height: 18, borderRadius: 9, background: "#fff", boxShadow: "0 1px 4px rgba(0,0,0,0.2)", transition: "all 0.2s" }} />
     </div>
   );
 }
@@ -39,24 +71,15 @@ const NAV_MANAGE = [
 function Sidebar({ activePath }) {
   const navigate = useNavigate();
   return (
-    <aside style={{
-      width: 210, flexShrink: 0, background: "#fff",
-      borderRight: "1px solid #e9e7f5", display: "flex",
-      flexDirection: "column", padding: "24px 14px 20px",
-      height: "100vh", position: "sticky", top: 0,
-    }}>
+    <aside style={{ width: 210, flexShrink: 0, background: "#fff", borderRight: "1px solid #e9e7f5", display: "flex", flexDirection: "column", padding: "24px 14px 20px", height: "100vh", position: "sticky", top: 0, overflowY: "auto" }}>
       <div
         onClick={() => navigate("/app/home")}
         onMouseEnter={e => e.currentTarget.style.opacity = ".75"}
         onMouseLeave={e => e.currentTarget.style.opacity = "1"}
-        style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 28, cursor: "none", transition: "opacity .2s" }}
+        style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 28, cursor: "pointer", transition: "opacity .2s" }}
       >
-        <div style={{
-          width: 34, height: 34, background: "linear-gradient(135deg,#a78bfa,#f9a8d4)",
-          borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: 17, boxShadow: "0 4px 12px rgba(167,139,250,.4)",
-        }}>💊</div>
-        <span style={{ fontSize: 16, fontWeight: 800, color: "#1a1433", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>MediPocket</span>
+        <div style={{ width: 34, height: 34, background: "linear-gradient(135deg,#a78bfa,#f9a8d4)", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 17, boxShadow: "0 4px 12px rgba(167,139,250,.4)" }}>💊</div>
+        <span style={{ fontSize: 16, fontWeight: 800, color: "#1a1433", fontFamily: "var(--fn)" }}>MediPocket</span>
       </div>
 
       <div style={{ fontSize: 11, fontWeight: 600, color: "#b0a8c8", letterSpacing: "0.06em", textTransform: "uppercase", padding: "0 8px", marginBottom: 6 }}>메인</div>
@@ -64,15 +87,7 @@ function Sidebar({ activePath }) {
         {NAV_MAIN.map(item => {
           const isActive = activePath === item.path;
           return (
-            <button key={item.path} onClick={() => navigate(item.path)} style={{
-              display: "flex", alignItems: "center", gap: 10,
-              padding: "9px 10px", borderRadius: 10, border: "none",
-              background: isActive ? "#ede9fe" : "transparent",
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-              fontSize: 13, fontWeight: isActive ? 700 : 500,
-              color: isActive ? "#7c3aed" : "#6b7280",
-              cursor: "none", textAlign: "left", width: "100%", transition: "all .15s",
-            }}>
+            <button key={item.path} onClick={() => navigate(item.path)} style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 10px", borderRadius: 10, border: "none", background: isActive ? "#ede9fe" : "transparent", fontFamily: "var(--fn)", fontSize: 13, fontWeight: isActive ? 700 : 500, color: isActive ? "#7c3aed" : "#6b7280", cursor: "pointer", textAlign: "left", width: "100%", transition: "all .15s" }}>
               <span style={{ fontSize: 15, width: 20, textAlign: "center" }}>{item.icon}</span>
               <span>{item.label}</span>
             </button>
@@ -85,36 +100,25 @@ function Sidebar({ activePath }) {
         {NAV_MANAGE.map(item => {
           const isActive = activePath === item.path;
           return (
-            <button key={item.label} onClick={() => item.path && navigate(item.path)} style={{
-              display: "flex", alignItems: "center", gap: 10,
-              padding: "9px 10px", borderRadius: 10, border: "none",
-              background: isActive ? "#ede9fe" : "transparent",
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-              fontSize: 13, fontWeight: isActive ? 700 : 500,
-              color: isActive ? "#7c3aed" : "#6b7280",
-              cursor: "none", textAlign: "left", width: "100%", transition: "all .15s",
-            }}>
+            <button key={item.label} onClick={() => item.path && navigate(item.path)} style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 10px", borderRadius: 10, border: "none", background: isActive ? "#ede9fe" : "transparent", fontFamily: "var(--fn)", fontSize: 13, fontWeight: isActive ? 700 : 500, color: isActive ? "#7c3aed" : "#6b7280", cursor: "pointer", textAlign: "left", width: "100%", transition: "all .15s" }}>
               <span style={{ fontSize: 15, width: 20, textAlign: "center" }}>{item.icon}</span>
               <span>{item.label}</span>
-              {item.badge && (
-                <span style={{ marginLeft: "auto", background: "#ef4444", color: "#fff", fontSize: 10, fontWeight: 700, borderRadius: 50, padding: "1px 7px" }}>{item.badge}</span>
-              )}
+              {item.badge && <span style={{ marginLeft: "auto", background: "#ef4444", color: "#fff", fontSize: 10, fontWeight: 700, borderRadius: 50, padding: "1px 7px" }}>{item.badge}</span>}
             </button>
           );
         })}
       </nav>
 
       <div style={{ flex: 1 }} />
-
       <div
         onClick={() => navigate("/app/setting")}
         onMouseEnter={e => e.currentTarget.style.opacity = ".75"}
         onMouseLeave={e => e.currentTarget.style.opacity = "1"}
-        style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 8px", borderTop: "1px solid #e9e7f5", marginTop: 12, cursor: "none", transition: "opacity .2s" }}
+        style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 8px", borderTop: "1px solid #e9e7f5", marginTop: 12, cursor: "pointer", transition: "opacity .2s" }}
       >
         <div style={{ width: 34, height: 34, borderRadius: "50%", background: "linear-gradient(135deg,#a78bfa,#7c3aed)", color: "#fff", fontSize: 11, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>메디</div>
         <div>
-          <div style={{ fontSize: 13, fontWeight: 700, color: "#1a1433", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>메디포</div>
+          <div style={{ fontSize: 13, fontWeight: 700, color: "#1a1433", fontFamily: "var(--fn)" }}>메디포</div>
           <div style={{ fontSize: 11, color: "#9ca3af" }}>개발자</div>
         </div>
       </div>
@@ -122,9 +126,28 @@ function Sidebar({ activePath }) {
   );
 }
 
-function Card({ children, style }) {
+/* ── 하단 탭바 (모바일 + 태블릿) ── */
+function BottomNav({ activePath }) {
+  const navigate = useNavigate();
   return (
-    <div style={{ background: "#fff", border: "0.8px solid #e9e7f5", borderRadius: 16, padding: "22px 24px 24px", ...style }}>
+    <nav style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "#fff", borderTop: "1px solid #e9e7f5", display: "flex", alignItems: "center", justifyContent: "space-around", padding: "8px 0 max(8px,env(safe-area-inset-bottom))", zIndex: 1000 }}>
+      {NAV_MAIN.map(item => {
+        const isActive = activePath === item.path;
+        return (
+          <button key={item.path} onClick={() => navigate(item.path)} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 3, padding: "4px 12px", border: "none", background: "transparent", cursor: "pointer", fontFamily: "var(--fn)", transition: "all .15s" }}>
+            <span style={{ fontSize: 20, lineHeight: 1, filter: isActive ? "drop-shadow(0 0 4px rgba(124,58,237,.4))" : "none" }}>{item.icon}</span>
+            <span style={{ fontSize: 10, fontWeight: 600, color: isActive ? "#7c3aed" : "#9ca3af" }}>{item.label}</span>
+          </button>
+        );
+      })}
+    </nav>
+  );
+}
+
+/* ── 카드 공통 ── */
+function Card({ children }) {
+  return (
+    <div style={{ background: "#fff", border: "0.8px solid #e9e7f5", borderRadius: 16, padding: "22px 24px 24px" }}>
       {children}
     </div>
   );
@@ -133,7 +156,7 @@ function Card({ children, style }) {
 function CardHeader({ label }) {
   return (
     <div style={{ borderBottom: "0.8px solid #e9e7f5", paddingBottom: 10, marginBottom: 4 }}>
-      <span style={{ fontSize: 13, fontWeight: 700, color: "#6b5f8a", letterSpacing: "0.5px", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{label}</span>
+      <span style={{ fontSize: 13, fontWeight: 700, color: "#6b5f8a", letterSpacing: "0.5px", fontFamily: "var(--fn)" }}>{label}</span>
     </div>
   );
 }
@@ -142,7 +165,7 @@ function SettingsRow({ label, sub, right, noBorder }) {
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 0", borderBottom: noBorder ? "none" : "0.8px solid #e9e7f5", gap: 12 }}>
       <div>
-        <div style={{ fontSize: 13, fontWeight: 500, color: "#1a1433", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{label}</div>
+        <div style={{ fontSize: 13, fontWeight: 500, color: "#1a1433", fontFamily: "var(--fn)" }}>{label}</div>
         {sub && <div style={{ fontSize: 11, color: "#9ca3af", marginTop: 4 }}>{sub}</div>}
       </div>
       <div style={{ flexShrink: 0 }}>{right}</div>
@@ -152,7 +175,7 @@ function SettingsRow({ label, sub, right, noBorder }) {
 
 function SelectBadge({ label }) {
   return (
-    <div style={{ border: "0.8px solid #e9e7f5", borderRadius: 8, padding: "5px 14px", fontSize: 12, color: "#1a1433", fontFamily: "'Plus Jakarta Sans', sans-serif", background: "#fff" }}>{label}</div>
+    <div style={{ border: "0.8px solid #e9e7f5", borderRadius: 8, padding: "5px 14px", fontSize: 12, color: "#1a1433", fontFamily: "var(--fn)", background: "#fff" }}>{label}</div>
   );
 }
 
@@ -170,7 +193,7 @@ function ProfileCard() {
             <div style={{ fontSize: 12, color: "#9ca3af", marginTop: 2 }}>개발자</div>
           </div>
         </div>
-        <button style={{ border: "0.8px solid #e9e7f5", borderRadius: 8, padding: "6px 16px", fontSize: 12, fontWeight: 600, color: "#6b5f8a", background: "#fff", cursor: "none", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>편집</button>
+        <button style={{ border: "0.8px solid #e9e7f5", borderRadius: 8, padding: "6px 16px", fontSize: 12, fontWeight: 600, color: "#6b5f8a", background: "#fff", cursor: "pointer", fontFamily: "var(--fn)" }}>편집</button>
       </div>
       <SettingsRow label="건강정보 별도 동의" sub="개인정보보호법 제23조" right={<Toggle on={toggles.health} onChange={set("health")} />} />
       <SettingsRow label="클라우드 동기화" sub="기기 간 데이터 동기화" right={<Toggle on={toggles.cloud} onChange={set("cloud")} />} />
@@ -219,44 +242,108 @@ function SecurityCard() {
       <SettingsRow label="앱 버전" right={<span style={{ fontSize: 12, color: "#9ca3af" }}>v1.0.0</span>} />
       <SettingsRow label="개인정보 처리방침" right={<span style={{ fontSize: 12, color: "#7c3aed" }}>보기 ›</span>} noBorder />
       <div style={{ marginTop: 10, display: "flex", flexDirection: "column", gap: 8 }}>
-        <button
-          onClick={() => navigate("/login")}
-          style={{ width: "100%", padding: "12px", background: "#fef2f2", border: "0.8px solid #fecaca", borderRadius: 10, fontSize: 13, fontWeight: 700, color: "#ef4444", cursor: "none", fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-        >로그아웃</button>
-        <button style={{ width: "100%", padding: "12px", background: "#fef2f2", border: "0.8px solid #fecaca", borderRadius: 10, fontSize: 13, fontWeight: 700, color: "#ef4444", cursor: "none", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>계정삭제</button>
+        <button onClick={() => navigate("/login")} style={{ width: "100%", padding: "12px", background: "#fef2f2", border: "0.8px solid #fecaca", borderRadius: 10, fontSize: 13, fontWeight: 700, color: "#ef4444", cursor: "pointer", fontFamily: "var(--fn)" }}>로그아웃</button>
+        <button style={{ width: "100%", padding: "12px", background: "#fef2f2", border: "0.8px solid #fecaca", borderRadius: 10, fontSize: 13, fontWeight: 700, color: "#ef4444", cursor: "pointer", fontFamily: "var(--fn)" }}>계정삭제</button>
       </div>
     </Card>
   );
 }
 
+/* ════════════════
+   메인
+════════════════ */
 export default function MediPocketSettings() {
+  const { isMobile, isTablet, isDesktop } = useBreakpoint();
+  const { cursor, ring } = useCursor();
+
+  const px = isDesktop ? 40 : isTablet ? 28 : 16;
+  // 데스크탑만 2열, 모바일·태블릿 1열
+  const gridCols = isDesktop ? "1fr 1fr" : "1fr";
+
   return (
     <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
-        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-        html,body{width:100%;height:100%;cursor:none;font-family:'Plus Jakarta Sans','Noto Sans KR',sans-serif;background:#f4f3ff;overflow:hidden;}
-        button{font-family:'Plus Jakarta Sans','Noto Sans KR',sans-serif;}
-        ::-webkit-scrollbar{width:4px;}
-        ::-webkit-scrollbar-track{background:transparent;}
-        ::-webkit-scrollbar-thumb{background:rgba(167,139,250,.3);border-radius:2px;}
-      `}</style>
+      <style>{CSS}</style>
 
-      <div style={{ display: "flex", height: "100vh", background: "#f4f3ff", overflow: "hidden" }}>
-        <Sidebar activePath="/app/setting" />
-        <main style={{ flex: 1, padding: "32px 40px 48px", overflowY: "auto" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 28 }}>
-            <span style={{ fontSize: 24 }}>⚙️</span>
-            <h1 style={{ fontSize: 24, fontWeight: 800, color: "#1a1433" }}>설정</h1>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
-            <ProfileCard />
-            <NotificationCard />
-            <AppSettingsCard />
-            <SecurityCard />
-          </div>
-        </main>
+      {/* 커스텀 커서 — 데스크탑만 */}
+      {isDesktop && (
+        <>
+          <div className="st-cursor"      style={{ left: cursor.x, top: cursor.y }} />
+          <div className="st-cursor-ring" style={{ left: ring.x,   top: ring.y   }} />
+        </>
+      )}
+
+      <div style={{ display: "flex", height: "100dvh", background: "#f4f3ff", overflow: "hidden", fontFamily: "var(--fn)" }}>
+
+        {/* 사이드바 — 데스크탑만 */}
+        {isDesktop && <Sidebar activePath="/app/setting" />}
+
+        {/* 메인 콘텐츠 */}
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", minWidth: 0 }}>
+
+          {/* 모바일·태블릿 상단 헤더 */}
+          {!isDesktop && (
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: `${isTablet ? 20 : 16}px ${px}px`, background: "#f4f3ff", flexShrink: 0 }}>
+              <div>
+                <div style={{ fontSize: 12, color: "#9ca3af", marginBottom: 2, fontFamily: "var(--fn)" }}>안녕하세요 👋</div>
+                <div style={{ fontSize: 18, fontWeight: 800, color: "#1a1433", fontFamily: "var(--fn)" }}>설정</div>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 600, color: "#6b5f8a", background: "#fff", padding: "6px 12px", borderRadius: 20, border: "0.8px solid #e9e7f5", whiteSpace: "nowrap" }}>
+                  ⚙️ 설정
+                </div>
+              </div>
+            </div>
+          )}
+
+          <main style={{
+            flex: 1,
+            padding: isDesktop
+              ? `32px ${px}px 48px`
+              : `0 ${px}px ${!isDesktop ? 100 : 48}px`,
+            overflowY: "auto",
+          }}>
+            {/* 데스크탑 타이틀 */}
+            {isDesktop && (
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 28 }}>
+                <span style={{ fontSize: 24 }}>⚙️</span>
+                <h1 style={{ fontSize: 24, fontWeight: 800, color: "#1a1433", fontFamily: "var(--fn)" }}>설정</h1>
+              </div>
+            )}
+
+            <div style={{ display: "grid", gridTemplateColumns: gridCols, gap: 16 }}>
+              <ProfileCard />
+              <NotificationCard />
+              <AppSettingsCard />
+              <SecurityCard />
+            </div>
+          </main>
+        </div>
+
+        {/* 하단 탭바 — 모바일 + 태블릿 */}
+        {!isDesktop && <BottomNav activePath="/app/setting" />}
       </div>
     </>
   );
 }
+
+const CSS = `
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700;800&display=swap');
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+:root { --fn:'Plus Jakarta Sans','Noto Sans KR',sans-serif; }
+html,body { width:100%; height:100%; font-family:var(--fn); background:#f4f3ff; overflow:hidden; }
+button { font-family:var(--fn); }
+@media(min-width:1024px){ html,body { cursor:none; } }
+
+.st-cursor      { width:10px; height:10px; border-radius:50%; background:#a78bfa; position:fixed; z-index:9999; pointer-events:none; transform:translate(-50%,-50%); mix-blend-mode:multiply; }
+.st-cursor-ring { width:32px; height:32px; border-radius:50%; border:1px solid #a78bfa; position:fixed; z-index:9998; pointer-events:none; transform:translate(-50%,-50%); opacity:.4; }
+
+::-webkit-scrollbar { width:4px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:rgba(167,139,250,.3); border-radius:2px; }
+::-webkit-scrollbar-thumb:hover { background:rgba(124,58,237,.4); }
+
+@media(max-width:767px){
+  /* 카드 패딩 축소 */
+  .st-card { padding:16px 16px 18px !important; }
+}
+`;

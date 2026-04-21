@@ -151,39 +151,37 @@ function Sidebar({ activePath }) {
 /* ════════════════
    비커 SVG
 ════════════════ */
-function Beaker({ color1, color2, pillColor, pillShape, animate }) {
+function Beaker({ color1, color2, animate }) {
   return (
-    <svg width="160" height="200" viewBox="0 0 160 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id={`bg-${color1}`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color1} stopOpacity="0.7" />
-          <stop offset="100%" stopColor={color2} stopOpacity="0.9" />
-        </linearGradient>
-        <clipPath id={`beaker-clip-${color1}`}>
-          <path d="M28 56 L28 152 Q28 172 48 172 L112 172 Q132 172 132 152 L132 56 Z" />
-        </clipPath>
-      </defs>
-      <path d="M28 56 L28 152 Q28 172 48 172 L112 172 Q132 172 132 152 L132 56 Z" fill={`url(#bg-${color1})`} />
-      <path d="M40 130 Q80 118 120 130 L120 172 Q100 172 80 172 Q60 172 40 172 Z" fill={color2} opacity="0.35" />
-      <path d="M28 56 L28 152 Q28 172 48 172 L112 172 Q132 172 132 152 L132 56" stroke="white" strokeWidth="2.5" strokeOpacity="0.6" fill="none" strokeLinecap="round" />
-      <rect x="20" y="44" width="120" height="16" rx="8" fill="white" fillOpacity="0.4" />
-      <rect x="20" y="44" width="120" height="16" rx="8" stroke="white" strokeWidth="1.5" strokeOpacity="0.5" fill="none" />
-      <rect x="40" y="28" width="80" height="20" rx="4" fill="white" fillOpacity="0.25" />
-      <ellipse cx="52" cy="80" rx="6" ry="18" fill="white" opacity="0.2" transform="rotate(-15 52 80)" />
-      {pillShape === "capsule" ? (
-        <g transform="translate(52, 52)" style={{ animation: animate ? "ck-pill-float 2.8s ease-in-out infinite" : "none" }}>
-          <rect x="0" y="0" width="56" height="24" rx="12" fill="white" opacity="0.95" />
-          <rect x="0" y="0" width="28" height="24" rx="12" fill={pillColor} opacity="0.9" />
-          <ellipse cx="14" cy="12" rx="10" ry="10" fill={pillColor} opacity="0.9" />
-        </g>
-      ) : (
-        <g transform="translate(55, 52)" style={{ animation: animate ? "ck-pill-float 3.2s ease-in-out infinite 0.4s" : "none" }}>
-          <ellipse cx="25" cy="12" rx="22" ry="12" fill="white" opacity="0.95" />
-          <ellipse cx="14" cy="12" rx="12" ry="12" fill={pillColor} opacity="0.85" />
-          <ellipse cx="14" cy="12" rx="6" ry="6" fill="white" opacity="0.3" />
-        </g>
-      )}
-    </svg>
+    <div style={{ position: "relative", width: "100%", height: "100%" }}>
+      <svg width="100%" height="100%" viewBox="0 0 160 200" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id={`bg-${color1}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={color1} stopOpacity="0.7" />
+            <stop offset="100%" stopColor={color2} stopOpacity="0.9" />
+          </linearGradient>
+        </defs>
+        <path d="M28 56 L28 152 Q28 172 48 172 L112 172 Q132 172 132 152 L132 56 Z" fill={`url(#bg-${color1})`} />
+        <path d="M40 130 Q80 118 120 130 L120 172 Q100 172 80 172 Q60 172 40 172 Z" fill={color2} opacity="0.35" />
+        <path d="M28 56 L28 152 Q28 172 48 172 L112 172 Q132 172 132 152 L132 56" stroke="white" strokeWidth="2.5" strokeOpacity="0.6" fill="none" strokeLinecap="round" />
+        <rect x="20" y="44" width="120" height="16" rx="8" fill="white" fillOpacity="0.4" />
+        <rect x="20" y="44" width="120" height="16" rx="8" stroke="white" strokeWidth="1.5" strokeOpacity="0.5" fill="none" />
+        <rect x="40" y="28" width="80" height="20" rx="4" fill="white" fillOpacity="0.25" />
+        <ellipse cx="52" cy="95" rx="6" ry="18" fill="white" opacity="0.18" transform="rotate(-15 52 95)" />
+      </svg>
+      {/* 💊 이모지 — position:absolute 로 비커 몸통 정중앙 */}
+      <div className="ck-pill-emoji" style={{
+        marginLeft:-20,
+        position: "absolute",
+        top: "52%", left: "50%",
+        transform: "translate(-50%, -50%)",
+        fontSize: "clamp(22px, 5vw, 30px)",
+        lineHeight: 1,
+        userSelect: "none",
+        animation: animate ? "ck-pill-float 2.8s ease-in-out infinite" : "none",
+        pointerEvents: "none",
+      }}>💊</div>
+    </div>
   );
 }
 
@@ -192,28 +190,35 @@ function Beaker({ color1, color2, pillColor, pillShape, animate }) {
 ════════════════ */
 function WarningBeaker() {
   return (
-    <svg width="160" height="200" viewBox="0 0 160 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="warn-bg" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#fcd34d" stopOpacity="0.6" />
-          <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.85" />
-        </linearGradient>
-      </defs>
-      <path d="M28 56 L28 152 Q28 172 48 172 L112 172 Q132 172 132 152 L132 56 Z" fill="url(#warn-bg)" />
-      <circle cx="55" cy="120" r="8" fill="#fbbf24" opacity="0.4" style={{ animation: "ck-bubble 2s ease-in-out infinite" }} />
-      <circle cx="85" cy="105" r="5" fill="#fbbf24" opacity="0.35" style={{ animation: "ck-bubble 2.4s ease-in-out infinite 0.6s" }} />
-      <circle cx="105" cy="125" r="6" fill="#fbbf24" opacity="0.3" style={{ animation: "ck-bubble 1.8s ease-in-out infinite 1.2s" }} />
-      <path d="M40 135 Q80 122 120 135 L120 172 Q80 172 40 172 Z" fill="#f59e0b" opacity="0.3" />
-      <path d="M28 56 L28 152 Q28 172 48 172 L112 172 Q132 172 132 152 L132 56" stroke="white" strokeWidth="2.5" strokeOpacity="0.55" fill="none" strokeLinecap="round" />
-      <rect x="20" y="44" width="120" height="16" rx="8" fill="white" fillOpacity="0.35" />
-      <rect x="20" y="44" width="120" height="16" rx="8" stroke="white" strokeWidth="1.5" strokeOpacity="0.4" fill="none" />
-      <rect x="40" y="28" width="80" height="20" rx="4" fill="white" fillOpacity="0.2" />
-      <g style={{ animation: "ck-warn-pulse 1.6s ease-in-out infinite" }}>
-        <polygon points="80,64 104,104 56,104" fill="#fbbf24" opacity="0.9" />
-        <polygon points="80,64 104,104 56,104" fill="none" stroke="white" strokeWidth="2" strokeOpacity="0.7" />
-        <text x="80" y="100" textAnchor="middle" fill="white" fontSize="22" fontWeight="700" fontFamily="Plus Jakarta Sans, sans-serif">!</text>
-      </g>
-    </svg>
+    <div style={{ position: "relative", width: "100%", height: "100%" }}>
+      <svg width="100%" height="100%" viewBox="0 0 160 200" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="warn-bg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#fcd34d" stopOpacity="0.6" />
+            <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.85" />
+          </linearGradient>
+        </defs>
+        <path d="M28 56 L28 152 Q28 172 48 172 L112 172 Q132 172 132 152 L132 56 Z" fill="url(#warn-bg)" />
+        <circle cx="55" cy="130" r="7" fill="#fbbf24" opacity="0.35" style={{ animation: "ck-bubble 2s ease-in-out infinite" }} />
+        <circle cx="95" cy="140" r="5" fill="#fbbf24" opacity="0.3" style={{ animation: "ck-bubble 2.4s ease-in-out infinite 0.6s" }} />
+        <path d="M40 145 Q80 132 120 145 L120 172 Q80 172 40 172 Z" fill="#f59e0b" opacity="0.3" />
+        <path d="M28 56 L28 152 Q28 172 48 172 L112 172 Q132 172 132 152 L132 56" stroke="white" strokeWidth="2.5" strokeOpacity="0.55" fill="none" strokeLinecap="round" />
+        <rect x="20" y="44" width="120" height="16" rx="8" fill="white" fillOpacity="0.35" />
+        <rect x="20" y="44" width="120" height="16" rx="8" stroke="white" strokeWidth="1.5" strokeOpacity="0.4" fill="none" />
+        <rect x="40" y="28" width="80" height="20" rx="4" fill="white" fillOpacity="0.2" />
+      </svg>
+      {/* ⚠️ 이모지 — position:absolute 로 비커 몸통 정중앙 */}
+      <div style={{
+        position: "absolute",
+        top: "52%", left: "50%",
+        transform: "translate(-50%, -50%)",
+        fontSize: "clamp(24px, 5vw, 36px)",
+        lineHeight: 1,
+        userSelect: "none",
+        animation: "ck-warn-pulse 1.6s ease-in-out infinite",
+        pointerEvents: "none",
+      }}>⚠️</div>
+    </div>
   );
 }
 
@@ -254,6 +259,7 @@ function ResultCard({ result }) {
    메인
 ════════════════ */
 export default function CheckPage() {
+  const navigate = useNavigate();
   const { cursor, ring } = useCursor();
   const [drugA,   setDrugA  ] = useState("");
   const [drugB,   setDrugB  ] = useState("");
@@ -261,6 +267,21 @@ export default function CheckPage() {
   const [checked, setChecked] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error,   setError  ] = useState("");
+  const [isMobile,  setIsMobile ] = useState(window.innerWidth < 768);
+  const [isTablet,  setIsTablet ] = useState(window.innerWidth >= 768 && window.innerWidth < 1024);
+
+  useEffect(() => {
+    const onResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  const showSidebar   = !isMobile && !isTablet;
+  const showBottomNav = isMobile  || isTablet;
+
 
   /* ── 약 이름 → item_seq 조회 ── */
   const getItemSeq = async (name) => {
@@ -325,154 +346,109 @@ export default function CheckPage() {
       <div className="ck-cursor"      style={{ left: cursor.x, top: cursor.y }} />
       <div className="ck-cursor-ring" style={{ left: ring.x,   top: ring.y   }} />
 
-      <div style={{
-        display: "flex", height: "100vh",
-        background: "#f0eeff",
-        fontFamily: "'Plus Jakarta Sans',sans-serif",
-        overflow: "hidden",
-      }}>
-        <Sidebar activePath="/app/check" />
+      <div className="ck-root">
+        {showSidebar && <Sidebar activePath="/app/check" />}
 
-        <main style={{
-          flex: 1, padding: "32px 36px",
-          display: "flex", flexDirection: "column",
-          gap: 20, overflowY: "auto",
-        }}>
+        <main className="ck-main">
           {/* 헤더 */}
-          <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 4 }}>
+          <div className="ck-header">
             <span style={{ fontSize: 26 }}>🧪</span>
             <div>
-              <div style={{ fontSize: 24, fontWeight: 800, color: "#1a1433" }}>병용 확인</div>
-              <div style={{ fontSize: 14, color: "#6b5f8a", marginTop: 3 }}>두 가지 약을 입력하면 병용 가능 여부를 확인합니다.</div>
+              <div className="ck-title">병용 확인</div>
+              <div className="ck-subtitle">두 가지 약을 입력하면 병용 가능 여부를 확인합니다.</div>
             </div>
           </div>
 
           {/* 인포바 */}
-          <div style={{
-            background: "#fdfbff", border: "0.8px solid rgba(167,139,250,.2)",
-            borderRadius: 14, padding: "20px 28px",
-            display: "flex", alignItems: "center", gap: 16,
-          }}>
-            <div style={{
-              width: 44, height: 44, borderRadius: 10,
-              background: "rgba(167,139,250,.2)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: 22, flexShrink: 0,
-            }}>💡</div>
+          <div className="ck-infobar">
+            <div className="ck-info-icon">💡</div>
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 17, fontWeight: 700, color: "#1a1433", marginBottom: 4 }}>
-                식약처 DUR 공공데이터 기반 실시간 병용 확인
-              </div>
-              <div style={{ fontSize: 13, color: "#9ca3af" }}>
-                130,000건 이상의 DUR 경고 데이터로 즉시 확인합니다.
-              </div>
+              <div className="ck-info-title">식약처 DUR 공공데이터 기반 실시간 병용 확인</div>
+              <div className="ck-info-desc">130,000건 이상의 DUR 경고 데이터로 즉시 확인합니다.</div>
             </div>
           </div>
 
-          {/* 비커 씬 */}
-          <div style={{
-            background: "#fdfbff",
-            border: "0.8px solid rgba(167,139,250,.15)",
-            borderRadius: 14, padding: "40px 0 32px",
-            display: "flex", flexDirection: "column",
-            alignItems: "center", gap: 0, flex: 1, minHeight: 360,
-          }}>
-            <div style={{
-              display: "flex", alignItems: "flex-end", gap: 0,
-              justifyContent: "center", width: "100%", paddingBottom: 28,
-            }}>
+          {/* 비커 씬 카드 */}
+          <div className="ck-scene-card">
+            <div className="ck-beaker-scene">
+
               {/* 비커 A */}
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
-                <Beaker color1="#c4b5fd" color2="#7c3aed" pillColor="#7c3aed" pillShape="capsule" animate={true} />
-                <div style={{
-                  background: "#f5f3ff", border: "0.8px solid #a78bfa",
-                  borderRadius: 24, height: 42, width: 160,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                }}>
+              <div className="ck-beaker-col">
+                <div className="ck-beaker-wrap">
+                  <Beaker color1="#c4b5fd" color2="#7c3aed" animate={true} />
+                </div>
+                <div className="ck-input-wrap">
                   <input
+                    className="ck-drug-input"
                     value={drugA}
                     onChange={e => { setDrugA(e.target.value); setChecked(false); setResult(null); setError(""); }}
                     onKeyDown={e => e.key === "Enter" && handleCheck()}
                     placeholder="첫 번째 약 이름"
-                    style={{
-                      border: "none", background: "transparent", textAlign: "center",
-                      fontFamily: "'Plus Jakarta Sans',sans-serif",
-                      fontSize: 14, fontWeight: 600, color: "#6b5f8a",
-                      outline: "none", width: "100%", cursor: "text",
-                    }}
                   />
                 </div>
               </div>
 
-              {/* + */}
-              <div style={{ fontSize: 36, fontWeight: 300, color: "#6b5f8a", paddingBottom: 56, margin: "0 24px" }}>+</div>
+              <div className="ck-op-symbol">+</div>
 
               {/* 비커 B */}
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
-                <Beaker color1="#fda4af" color2="#f43f5e" pillColor="#f43f5e" pillShape="circle" animate={true} />
-                <div style={{
-                  background: "#f5f3ff", border: "0.8px solid #a78bfa",
-                  borderRadius: 24, height: 42, width: 160,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                }}>
+              <div className="ck-beaker-col">
+                <div className="ck-beaker-wrap">
+                  <Beaker color1="#fda4af" color2="#f43f5e" animate={true} />
+                </div>
+                <div className="ck-input-wrap">
                   <input
+                    className="ck-drug-input"
                     value={drugB}
                     onChange={e => { setDrugB(e.target.value); setChecked(false); setResult(null); setError(""); }}
                     onKeyDown={e => e.key === "Enter" && handleCheck()}
                     placeholder="두 번째 약 이름"
-                    style={{
-                      border: "none", background: "transparent", textAlign: "center",
-                      fontFamily: "'Plus Jakarta Sans',sans-serif",
-                      fontSize: 14, fontWeight: 600, color: "#6b5f8a",
-                      outline: "none", width: "100%", cursor: "text",
-                    }}
                   />
                 </div>
               </div>
 
-              {/* → */}
-              <div style={{ fontSize: 36, fontWeight: 300, color: "#6b5f8a", paddingBottom: 56, margin: "0 24px" }}>→</div>
+              <div className="ck-op-symbol">→</div>
 
-              {/* 결과 비커 + 버튼 */}
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
-                <WarningBeaker />
+              {/* 결과 비커 */}
+              <div className="ck-beaker-col">
+                <div className="ck-beaker-wrap">
+                  <WarningBeaker />
+                </div>
                 <button
                   onClick={handleCheck}
                   disabled={loading}
-                  style={{
-                    height: 49, width: 175, borderRadius: 30,
-                    background: (drugA && drugB && !loading)
-                      ? "linear-gradient(135deg,#7c3aed,#a78bfa)"
-                      : "#e5e7eb",
-                    border: "none",
-                    color: (drugA && drugB && !loading) ? "#fff" : "#9ca3af",
-                    fontSize: 15, fontWeight: 700, cursor: "none",
-                    fontFamily: "'Plus Jakarta Sans',sans-serif",
-                    boxShadow: (drugA && drugB && !loading) ? "0 6px 22px rgba(124,58,237,.4)" : "none",
-                    transition: "all .25s",
-                    display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-                  }}
+                  className={"ck-check-btn" + ((drugA && drugB && !loading) ? " active" : "")}
                 >
                   {loading ? "확인 중..." : "🧪 병용 확인"}
                 </button>
               </div>
+
             </div>
           </div>
 
           {/* 에러 */}
           {error && (
-            <div style={{
-              background: "#fef2f2", border: "1px solid #fee2e2",
-              borderRadius: 12, padding: "14px 20px",
-              fontSize: 14, color: "#ef4444", fontWeight: 500,
-            }}>
-              ⚠️ {error}
-            </div>
+            <div className="ck-error">⚠️ {error}</div>
           )}
 
           {/* 결과 카드 */}
           {checked && result && <ResultCard result={result} />}
         </main>
+
+        {/* 하단 탭바 */}
+        {showBottomNav && (
+          <nav className="ck-bottom-nav">
+            {NAV_MAIN.map(item => (
+              <button
+                key={item.path}
+                className={"ck-bottom-btn" + (item.path === "/app/check" ? " active" : "")}
+                onClick={() => navigate(item.path)}
+              >
+                <span className="ck-bottom-icon">{item.icon}</span>
+                <span className="ck-bottom-label">{item.label}</span>
+              </button>
+            ))}
+          </nav>
+        )}
       </div>
     </>
   );
@@ -484,10 +460,17 @@ export default function CheckPage() {
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html,body{width:100%;height:100%;cursor:none;font-family:'Plus Jakarta Sans',sans-serif;overflow:hidden;}
+html,body{width:100%;height:100%;cursor:none;font-family:'Plus Jakarta Sans',sans-serif;}
+@media(max-width:1023px){html,body{cursor:auto;}}
 
-.ck-cursor{width:10px;height:10px;border-radius:50%;background:#a78bfa;position:fixed;z-index:9999;pointer-events:none;transform:translate(-50%,-50%);mix-blend-mode:multiply;}
-.ck-cursor-ring{width:32px;height:32px;border-radius:50%;border:1px solid #a78bfa;position:fixed;z-index:9998;pointer-events:none;transform:translate(-50%,-50%);opacity:.4;}
+:root{
+  --p:#7c3aed;--pl:#ede9fe;--a1:#a78bfa;
+  --txt:#1a1433;--sub:#6b5f8a;--gray:#9ca3af;--bd:#e9e7f5;
+  --bg:#f0eeff;
+}
+
+.ck-cursor{width:10px;height:10px;border-radius:50%;background:var(--a1);position:fixed;z-index:9999;pointer-events:none;transform:translate(-50%,-50%);mix-blend-mode:multiply;}
+.ck-cursor-ring{width:32px;height:32px;border-radius:50%;border:1px solid var(--a1);position:fixed;z-index:9998;pointer-events:none;transform:translate(-50%,-50%);opacity:.4;}
 
 @keyframes ck-pill-float{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-8px) rotate(4deg)}}
 @keyframes ck-bubble{0%{transform:translateY(0);opacity:.4}100%{transform:translateY(-40px);opacity:0}}
@@ -498,4 +481,105 @@ html,body{width:100%;height:100%;cursor:none;font-family:'Plus Jakarta Sans',san
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:rgba(167,139,250,.3);border-radius:2px;}
 ::-webkit-scrollbar-thumb:hover{background:rgba(124,58,237,.4);}
+
+/* ── 레이아웃 ── */
+.ck-root{display:flex;flex-direction:column;height:100dvh;background:var(--bg);overflow:hidden;}
+.ck-main{flex:1;padding:32px 36px;display:flex;flex-direction:column;gap:20px;overflow-y:auto;min-width:0;}
+
+/* 헤더 */
+.ck-header{display:flex;align-items:center;gap:14px;margin-bottom:4px;}
+.ck-title{font-size:24px;font-weight:800;color:var(--txt);}
+.ck-subtitle{font-size:14px;color:var(--sub);margin-top:3px;}
+
+/* 인포바 */
+.ck-infobar{background:#fdfbff;border:0.8px solid rgba(167,139,250,.2);border-radius:14px;padding:20px 28px;display:flex;align-items:center;gap:16px;}
+.ck-info-icon{width:44px;height:44px;border-radius:10px;background:rgba(167,139,250,.2);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.ck-info-title{font-size:17px;font-weight:700;color:var(--txt);margin-bottom:4px;}
+.ck-info-desc{font-size:13px;color:var(--gray);}
+
+/* 씬 카드 */
+.ck-scene-card{background:#fdfbff;border:0.8px solid rgba(167,139,250,.15);border-radius:14px;padding:40px 24px 32px;display:flex;justify-content:center;align-items:center;flex:1;min-height:320px;}
+
+/* 비커 씬 — 가로 배열 */
+.ck-beaker-scene{display:flex;align-items:flex-end;justify-content:center;gap:0;flex-wrap:nowrap;}
+.ck-beaker-col{display:flex;flex-direction:column;align-items:center;gap:14px;}
+.ck-beaker-wrap{position:relative;display:flex;align-items:center;justify-content:center;width:160px;aspect-ratio:4/5;overflow:visible;}
+.ck-beaker-wrap svg{width:100%;height:100%;display:block;}
+.ck-op-symbol{font-size:36px;font-weight:300;color:var(--sub);padding-bottom:56px;margin:0 20px;flex-shrink:0;}
+
+/* 입력 */
+.ck-input-wrap{background:#f5f3ff;border:0.8px solid var(--a1);border-radius:24px;height:42px;width:160px;display:flex;align-items:center;justify-content:center;}
+.ck-drug-input{border:none;background:transparent;text-align:center;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;color:var(--sub);outline:none;width:100%;padding:0 12px;cursor:text;}
+
+/* 확인 버튼 */
+.ck-check-btn{height:42px;width:160px;border-radius:30px;background:#e5e7eb;border:none;color:var(--gray);font-size:14px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:6px;}
+.ck-check-btn.active{background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;box-shadow:0 6px 22px rgba(124,58,237,.4);cursor:pointer;}
+
+/* 에러 */
+.ck-error{background:#fef2f2;border:1px solid #fee2e2;border-radius:12px;padding:14px 20px;font-size:14px;color:#ef4444;font-weight:500;}
+
+/* 하단 탭바 */
+.ck-bottom-nav{display:flex;align-items:center;justify-content:space-around;background:#fff;border-top:1px solid var(--bd);padding:8px 0 max(8px,env(safe-area-inset-bottom));flex-shrink:0;z-index:100;}
+.ck-bottom-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 12px;background:transparent;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s;flex:1;}
+.ck-bottom-icon{font-size:20px;line-height:1;}
+.ck-bottom-label{font-size:10px;font-weight:600;color:var(--gray);}
+.ck-bottom-btn.active .ck-bottom-label{color:var(--p);}
+.ck-bottom-btn.active .ck-bottom-icon{filter:drop-shadow(0 0 4px rgba(124,58,237,.4));}
+
+/* ── 데스크탑: 사이드바 + 메인 가로 배열 ── */
+@media(min-width:1024px){
+  .ck-root{flex-direction:row;}
+  .ck-main{overflow-y:auto;}
+}
+
+/* ── 태블릿 (768~1023px) ── */
+@media(max-width:1023px){
+  .ck-main{padding:16px 16px 20px;}
+  .ck-cursor,.ck-cursor-ring{display:none;}
+  .ck-beaker-wrap{width:120px;}
+  
+  .ck-input-wrap{width:120px;}
+  .ck-check-btn{width:120px;font-size:12px;}
+  .ck-op-symbol{font-size:28px;margin:0 12px;padding-bottom:42px;}
+  .ck-info-title{font-size:15px;}
+}
+
+/* ── 모바일 (~767px) ── */
+@media(max-width:767px){
+  .ck-main{padding:12px 12px 16px;gap:12px;}
+  .ck-title{font-size:20px;}
+  .ck-subtitle{font-size:12px;}
+  .ck-infobar{padding:14px 16px;gap:12px;}
+  .ck-info-icon{width:36px;height:36px;font-size:18px;}
+  .ck-info-title{font-size:14px;}
+  .ck-scene-card{padding:24px 16px 20px;min-height:unset;flex:unset;}
+
+  /* 모바일: 세로 스택 */
+  .ck-beaker-scene{flex-direction:column;align-items:center;gap:8px;}
+  .ck-beaker-col{flex-direction:row;gap:16px;width:100%;justify-content:center;}
+  .ck-beaker-wrap{width:80px;flex-shrink:0;}
+  
+  .ck-op-symbol{font-size:28px;padding-bottom:0;margin:4px 0;}
+  .ck-input-wrap{width:200px;flex:1;max-width:240px;}
+  .ck-drug-input{font-size:13px;}
+  .ck-check-btn{width:100%;max-width:260px;height:46px;font-size:15px;}
+  .ck-cursor,.ck-cursor-ring{display:none;}
+}
+  @media(max-width:375px){
+  .ck-header{
+  padding:10px;}
+  .ck-infobar{
+  margin-top:10px;}
+  .ck-scene-card{
+  margin-top:40px;}
+   .ck-pill-emoji{font-size:clamp(20px, 5vw, 26px) !important;
+   padding-left:6px;}
+   .ck-input-wrap{
+   margin-top:10px;}
+   .ck-check-btn{
+   margin-top:15px;}
+  .ck-op-symbol {
+    text-align: center;
+    width: 100%;
+  }
 `;

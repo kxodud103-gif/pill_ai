@@ -626,10 +626,10 @@ body{font-family:var(--sp-font);background:var(--sp-bg1);color:var(--sp-text);}
 .sp-chip{position:absolute;display:flex;align-items:center;justify-content:center;height:54px;border-radius:75px;font-size:clamp(14px,1.1vw,20px);font-weight:600;border:2px solid;transition:transform .2s,box-shadow .2s;white-space:nowrap;}
 .sp-chip:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(120,80,200,.15);}
 .sp-chip-purple{background:#ffffffe6;border-color:rgba(167,139,250,.3);color:var(--sp-pill);}
-.sp-chip-1{left:0;width:25.45%;top:0;}
-.sp-chip-2{left:27.57%;width:27.99%;top:0;}
-.sp-chip-3{left:0;width:25.45%;top:69px;}
-.sp-chip-4{left:27.57%;width:26.22%;top:69px;}
+.sp-chip-1{left:0;width:30%;top:0;}
+.sp-chip-2{left:27.57%;width:30%;top:0;margin-left:20px;}
+.sp-chip-3{left:0;width:30%;top:69px;}
+.sp-chip-4{left:27.57%;width:30%;top:69px;margin-left:20px;}
 .sp-chips-row{display:flex;flex-wrap:nowrap;gap:10px;margin-top:24px;}
 .sp-chips-row .sp-chip{position:static;height:54px;padding:0 20px;}
 .sp-chip-red{background:#fff5f5;border-color:rgba(239,68,68,.25);color:#ef4444;}
@@ -774,4 +774,339 @@ body{font-family:var(--sp-font);background:var(--sp-bg1);color:var(--sp-text);}
 .wr-c6 .wr-icon{top:calc(50% - 75px);left:6.89%;}
 .wr-c6 .wr-title{top:calc(50% - 22px);left:6.89%;width:27.37%;}
 .wr-c6 .wr-desc{top:calc(50% + 24px);left:6.89%;}
+
+/* ══════════════════════════════
+   반응형 — 태블릿 (≤ 1024px)
+══════════════════════════════ */
+@media (max-width: 1024px) {
+  /* NAV */
+  .sp-nav{padding:0 32px;}
+  .sp-nav-links button{padding:8px 12px;font-size:13px;}
+
+  /* 섹션 공통 */
+  .sp-sec-intro,.sp-sec-app,.sp-sec-dur{gap:40px;padding:64px 40px 0;}
+  .sp-sec-left{flex:0 0 420px;}
+
+  /* 섹션1 폰 목업 */
+  .sp-vis-block{width:520px;height:380px;}
+  .sp-phone-mockup{width:300px;height:360px;top:calc(50% - 180px);left:calc(50% - 150px);}
+  .sp-badge-float-top{left:calc(50% + 130px);top:calc(50% - 150px);width:160px;height:78px;}
+  .sp-badge-float-bottom{left:calc(50% - 300px);top:calc(50% + 55px);width:180px;height:78px;}
+
+  /* 섹션2 앱스크린 */
+  .sp-app-screens{width:480px;height:380px;}
+
+  /* 섹션3 DUR */
+  .sp-dur-visual{width:380px;}
+
+  /* 섹션4 WHY */
+  .sp-sec-why{padding:64px 24px 0;gap:16px;}
+  .sp-why-left-block{scale:0.6;}
+  .sp-why-right-block{scale:0.52;}
+}
+
+/* ══════════════════════════════
+   반응형 — 모바일 (≤ 768px)
+══════════════════════════════ */
+@media (max-width: 768px) {
+.sp-chip-1{}
+.sp-chip-2{margin-left:0px;}
+.sp-chip-3{}
+.sp-chip-4{margin-left:0px;}
+  /* 커서 숨김 */
+  html,body{cursor:auto;}
+  .sp-cursor,.sp-cursor-ring,.sp-light-follow{display:none;}
+
+  /* NAV */
+  .sp-nav{padding:0 20px;height:56px;}
+  .sp-nav-links{display:none;}
+  .sp-nav-actions{gap:8px;}
+  .sp-btn-ghost,.sp-btn-pri{padding:7px 14px;font-size:13px;}
+
+  /* 도트 네비 */
+  .sp-fp-dots{right:12px;gap:8px;}
+  .sp-fp-dot{width:6px;height:6px;}
+
+  /* 섹션 공통 — 세로 스택, 100vh 유지 */
+  .sp-fp-section{
+    flex-direction:column;
+    justify-content:flex-start;
+    align-items:center;
+    overflow:hidden;
+    height:100vh;
+    box-sizing:border-box;
+  }
+  .sp-sec-intro,.sp-sec-app{
+    flex-direction:column;
+    align-items:center;
+    gap:16px;
+    padding:64px 20px 16px;
+    justify-content:center;
+  }
+  /* DUR 섹션 — 내부 스크롤 허용 */
+  .sp-fp-section.sp-sec-dur{
+    flex-direction:column;
+    align-items:center;
+    gap:16px;
+    padding:64px 20px 16px;
+    justify-content:center;
+    overflow-y:auto;
+    overflow-x:hidden;
+  }
+
+  /* WHY 섹션 — overflow-y:auto로 내부 스크롤 */
+  .sp-fp-section.sp-sec-why{
+    flex-direction:column;
+    align-items:center;
+    padding:64px 20px 16px;
+    gap:12px;
+    justify-content:center;
+    overflow-y:auto;
+    overflow-x:hidden;
+    height:100vh;
+    box-sizing:border-box;
+  }
+
+  /* 좌/우 블록 → 전폭 가운데 */
+  .sp-sec-left{
+    flex:unset;
+    width:100%;
+    max-width:500px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    margin-top:80px;
+    margin-bottom:50px;
+  }
+  /* DUR 섹션은 카드가 많아서 margin 축소 */
+  .sp-sec-dur .sp-sec-left{
+    margin-top:20px;
+    margin-bottom:16px;
+  }
+  .sp-sec-right{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+  }
+
+  /* 근거카드 width를 sp-sec-right 컨텐츠와 동일하게 */
+  .sp-evidence-box{width:100%;max-width:420px;margin-top:16px;}
+
+  /* 레이블 */
+  .sp-sec-label{justify-content:center;}
+
+  /* heading 크기 축소 */
+  .sp-heading-plain,.sp-heading-grad{font-size:clamp(26px,7vw,38px);}
+
+  /* desc */
+  .sp-sec-desc{margin-bottom:16px;}
+  .sp-sec-desc p{font-size:14px;}
+
+  /* 칩 — flex wrap 가운데 */
+  .sp-sec-chips{
+    position:static;
+    height:auto;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:8px;
+    margin-top:16px;
+    width:100%;
+  }
+  .sp-chip{position:static;width:auto;padding:0 16px;font-size:13px;height:40px;white-space:nowrap;}
+  .sp-chips-row{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:16px;}
+  .sp-chips-row .sp-chip{position:static;height:40px;padding:0 16px;}
+
+  /* 근거카드 */
+  .sp-evidence-box{width:100%;margin-top:16px;}
+
+  /* ── 섹션1: 폰 목업 ── */
+  .sp-vis-block{
+    width:300px;
+    height:450px;
+    margin:0 auto;
+    flex-shrink:0;
+  }
+  .sp-phone-glow{width:300px;height:300px;top:calc(50% - 150px);left:calc(50% - 150px);}
+  .sp-phone-mockup{
+    width:280px;height:430px;
+    top:calc(50% - 240px);left:calc(50% - 140px);
+    border-radius:36px;
+  }
+  .sp-badge-float-top{display:none;}
+  .sp-badge-float-bottom{display:none;}
+
+  /* ── 섹션2: 앱스크린 — 스크롤 없이 화면 꽉 차게 ── */
+  .sp-app-screens{
+    position:static;
+    width:100%;
+    max-width:100%;
+    height:auto;
+    display:flex;
+    flex-direction:row;
+    align-items:flex-end;
+    gap:6px;
+    margin:0 auto;
+    overflow:visible;
+    padding:0 4px 4px;
+  }
+  /* 카드: flex:1로 균등 분할 */
+  .sp-app-screen{
+    position:static;
+    flex:1;
+    min-width:0;
+    min-height:280px;
+    border-radius:16px;
+  }
+  .sp-app-tall,.sp-app-mid,.sp-app-short{
+    left:auto;width:auto;
+  }
+  .sp-as-bar{height:40px;}
+  .sp-as-body{gap:8px;padding:10px 8px;}
+  .sp-as-item{padding:7px 8px;}
+  .sp-as-item-title{font-size:12px;}
+  .sp-as-item-sub{font-size:11px;}
+  .sp-as-tag{font-size:10px;padding:2px 7px;margin-top:4px;}
+
+  /* ── 섹션3: DUR ── */
+  .sp-dur-visual{width:100%;max-width:420px;margin:0 auto;}
+  .sp-dur-card{padding:18px 16px;}
+  .sp-dur-header-title{font-size:14px;}
+  .sp-dur-badge{font-size:12px;padding:4px 12px;}
+  .sp-dur-drug{font-size:13px;}
+  .sp-dur-arrow{font-size:11px;}
+
+  /* ── 섹션4 WHY ── */
+  /* left block */
+  .sp-why-left-block{
+    scale:unset;
+    transform:none;
+    width:100%;
+    max-width:100%;
+    height:auto;
+    position:static;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    align-items:center;
+    text-align:center;
+    margin:0 auto 50px;
+    flex-shrink:0;
+  }
+  .wl-label{position:static;width:100%;height:auto;display:flex;align-items:center;justify-content:center;gap:8px;}
+  .wl-label-bar{position:static;width:20px;height:2px;flex-shrink:0;}
+  .wl-label-txt{position:static;font-size:11px;letter-spacing:2px;}
+  .wl-title{position:static;width:100%;height:auto;display:flex;flex-direction:column;gap:0;}
+  .wl-title-plain{position:static;width:100%;font-size:22px;line-height:1.15;}
+  .wl-title-grad{position:static;width:100%;top:auto;font-size:22px;line-height:1.15;}
+  .wl-desc{position:static;width:100%;height:auto;display:flex;flex-direction:column;gap:2px;}
+  .wl-desc-1{position:static;width:100%;font-size:12px;line-height:1.5;}
+  .wl-desc-2{position:static;width:100%;font-size:12px;line-height:1.5;}
+  .wl-stats{position:static;width:100%;height:auto;display:flex;justify-content:center;gap:16px;}
+  .wl-stat-frame{position:static;height:auto;display:flex;flex-direction:column;gap:2px;align-items:center;}
+  .wl-stat-1,.wl-stat-2,.wl-stat-3{left:auto;width:auto;}
+  .wl-stat-n{font-size:18px;max-height:unset;line-height:1;}
+  .wl-stat-l{font-size:10px;max-height:unset;}
+
+  /* wr-c1~c6 데스크탑 top/left 리셋 */
+  .wr-c1,.wr-c2,.wr-c3,.wr-c4,.wr-c5,.wr-c6{
+    top:0!important;left:0!important;
+    width:100%!important;height:auto!important;
+  }
+
+  /* right block: 2열 grid */
+  .sp-why-right-block{
+    scale:unset;
+    transform:none;
+    width:100%;
+    max-width:100%;
+    height:auto;
+    position:static;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin:0 auto;
+  }
+  /* 카드: flex column, overflow:visible로 높이 자연스럽게 */
+  .wr-card{
+    position:relative;
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    display:flex;
+    flex-direction:column;
+    padding:14px 12px 12px;
+    overflow:visible;
+  }
+  .wr-bar{position:absolute;top:0;left:0;width:100%;height:3px;}
+  .wr-num{position:static;font-size:10px;color:rgba(167,139,250,.2);text-align:right;line-height:1;margin-bottom:6px;order:-1;}
+  .wr-icon{position:static;font-size:20px;line-height:1;margin-bottom:6px;top:auto;left:auto;}
+  .wr-title{position:static;width:100%;font-size:12px;font-weight:700;line-height:1.3;margin-bottom:4px;top:auto;left:auto;}
+  .wr-desc{position:static;width:100%;font-size:11px;color:#6b7280;line-height:1.5;margin:0;top:auto;left:auto;}
+  .wr-c2 .wr-icon,.wr-c3 .wr-icon,.wr-c4 .wr-icon,.wr-c5 .wr-icon,.wr-c6 .wr-icon{position:static;font-size:20px;top:auto;left:auto;}
+  .wr-c2 .wr-title,.wr-c3 .wr-title,.wr-c4 .wr-title,.wr-c5 .wr-title,.wr-c6 .wr-title{position:static;width:100%;top:auto;left:auto;}
+  .wr-c2 .wr-desc,.wr-c3 .wr-desc,.wr-c4 .wr-desc,.wr-c5 .wr-desc,.wr-c6 .wr-desc{position:static;width:100%;top:auto;left:auto;}
+}
+
+/* ══════════════════════════════
+   반응형 — 소형 모바일 (≤ 375px)
+══════════════════════════════ */
+@media (max-width: 375px) {
+  .sp-nav-actions .sp-btn-ghost{display:none;}
+  .sp-sec-intro,.sp-sec-app{padding:62px 14px 12px;}
+  .sp-fp-section.sp-sec-dur{padding:62px 14px 12px;}
+  .sp-fp-section.sp-sec-why{padding:62px 14px 12px;gap:8px;justify-content:center;}
+
+  /* 섹션1 폰 */
+  .sp-vis-block{width:270px;height:400px;}
+  .sp-phone-mockup{width:240px;height:315px;top:calc(50% - 195px);left:calc(50% - 125px);border-radius:36px;}
+  .sp-phone-screen{border-radius:28px;margin:14px 4%;}
+  .sp-ps-notch{margin:16px 35% 0;}
+  .sp-ps-screen-title{font-size:13px;margin:12px 0 0 7%;}
+  .sp-ps-card{margin:10px 5% 0;border-radius:14px;}
+  .sp-ps-card-sub{font-size:10px;margin:10px 0 0 6%;}
+  .sp-ps-card-val{font-size:13px;margin:5px 0 0 6%;}
+  .sp-ps-prog{margin:8px 6% 10px;}
+  .sp-ps-card-2{margin-top:8px;gap:8px;}
+  .sp-ps-pills-row{height:24px;margin:0 5% 10px;}
+  .sp-ps-pill{height:24px;font-size:9px;}
+  .sp-ps-alert{font-size:10px;padding:8px;margin:0 5% 10px;}
+
+  /* 섹션2 앱스크린 — 스크롤 없이 화면 꽉 차게 */
+  .sp-app-screens{
+    max-width:100%;
+    gap:4px;
+    padding:0 2px 4px;
+    overflow:visible;
+  }
+  .sp-app-screen{
+    flex:1;
+    min-width:0;
+    min-height:220px;
+    width:auto;
+  }
+  .sp-app-tall,.sp-app-mid,.sp-app-short{width:auto;}
+  .sp-as-bar{height:28px;}
+  .sp-as-body{gap:5px;padding:7px 5px;}
+  .sp-as-item{padding:5px 6px;}
+  .sp-as-item-title{font-size:10px;}
+  .sp-as-item-sub{font-size:9px;}
+  .sp-as-tag{font-size:9px;padding:1px 5px;}
+
+  /* 섹션4 WHY — 2열 유지, 크기 더 축소 */
+  .sp-why-left-block{gap:4px;}
+  .wl-title-plain,.wl-title-grad{font-size:18px;}
+  .wl-desc-1,.wl-desc-2{font-size:11px;}
+  .wl-stat-n{font-size:15px;}
+  .wl-stat-l{font-size:9px;}
+  .wl-stats{gap:10px;}
+  .sp-why-right-block{gap:6px;}
+  .wr-card{padding:10px 8px 8px;}
+  .wr-icon,.wr-c2 .wr-icon,.wr-c3 .wr-icon,.wr-c4 .wr-icon,.wr-c5 .wr-icon,.wr-c6 .wr-icon{font-size:16px;margin-bottom:3px;}
+  .wr-title,.wr-c2 .wr-title,.wr-c3 .wr-title,.wr-c4 .wr-title,.wr-c5 .wr-title,.wr-c6 .wr-title{font-size:10px;margin-bottom:2px;}
+  .wr-desc,.wr-c2 .wr-desc,.wr-c3 .wr-desc,.wr-c4 .wr-desc,.wr-c5 .wr-desc,.wr-c6 .wr-desc{font-size:9px;line-height:1.35;}
+  .wr-num{font-size:9px;margin-bottom:3px;}
+}
 `;
